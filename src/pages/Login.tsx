@@ -7,6 +7,8 @@ const SCOPES = [
   "user-read-email",
   "playlist-read-private",
   "playlist-read-collaborative",
+  "playlist-modify-public",
+  "playlist-modify-private"
 ];
 
 
