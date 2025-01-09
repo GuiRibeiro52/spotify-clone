@@ -8,6 +8,7 @@ export default {
     extend: {
       fontFamily:{
         dm: ['DM Sans', 'sans-serif'],
+        rubik: ['Rubik', 'sans-serif'],
       },
       colors:{
         primary: '#57B660'
