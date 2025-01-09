@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
 const CLIENT_ID = "e91af643cc464215869afe53be7c4cd4";
 const CLIENT_SECRET = "01fe749dbb8c451a941e9b71058bacd8";
 const REDIRECT_URI = "http://localhost:5173/callback";
@@ -16,6 +17,7 @@ const Callback = () => {
 
       if (!code) {
         console.error("Código de autorização não encontrado na URL.");
+        navigate("/login"); 
         return;
       }
 
@@ -35,14 +37,14 @@ const Callback = () => {
             },
           }
         );
-        const { access_token, refresh_token } = response.data;
 
+        const { access_token, refresh_token } = response.data;
        
         localStorage.setItem("spotify_access_token", access_token);
         localStorage.setItem("spotify_refresh_token", refresh_token);
 
        
-        navigate("/home");
+        navigate("/");
       } catch (error) {
         console.error("Erro ao buscar token:", error);
       }
