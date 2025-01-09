@@ -5,6 +5,8 @@ import Artistas from "./pages/Artistas";
 import Playlists from "./pages/Playlists";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login.tsx";
+import Callback from "./pages/Callback.tsx";
+
 
 export const router = createBrowserRouter([
   {
@@ -12,7 +14,7 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/",
+        path: "/home",
         element: <Home />
       },
       {
@@ -29,7 +31,8 @@ export const router = createBrowserRouter([
       },
     ],
   },
-  {path: "/login", element: <Login />}
+  {path: "/login", element: <Login />},
+  {path: "/callback", element: <Callback />}
 ]);
 
 
