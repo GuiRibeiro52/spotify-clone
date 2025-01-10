@@ -14,6 +14,7 @@ const Sidebar = () => {
 
   
   const isActive = (path: string) => location.pathname === path;
+  const isArtistasActive = () => location.pathname.startsWith("/artistas");
 
   return (
     <div className="w-[250px] h-screen bg-black text-white fixed left-0 top-0 flex flex-col justify-between font-dm font-bold">
@@ -39,13 +40,13 @@ const Sidebar = () => {
             </li>
             <li className="flex items-center space-x-4">
               <img
-                src={isActive("/artistas") ? disc : discInavito}
+                src={isArtistasActive() ? disc : discInavito}
                 alt="artistas"
                 className="w-6"
               />
               <Link
                 to="/artistas"
-                style={{ color: isActive("/artistas") ? "#FFFFFF" : "#949EA2" }}
+                style={{ color: isArtistasActive() ? "#FFFFFF" : "#949EA2" }}
                 className="hover:text-white transition"
               >
                 Artistas
