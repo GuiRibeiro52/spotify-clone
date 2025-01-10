@@ -14,7 +14,7 @@ const SCOPES = [
 
 const LOGIN_URL = `https://accounts.spotify.com/authorize?response_type=code&client_id=${CLIENT_ID}&scope=${encodeURIComponent(
   SCOPES.join(" "),
-)}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
+)}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&show_dialog=true`;
 
 const Login = () => {
   const handleLogin = () => {
