@@ -92,9 +92,9 @@ const Playlists = () => {
   };
 
   return (
-    <div className="bg-[#090707] min-h-screen pl-[250px] text-white font-rubik">
+    <div className="bg-[#090707] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik">
       <div className="p-8">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col space-y-8 sm:space-y-0 sm:flex-row sm:justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold">Minhas Playlists</h1>
             <p className="text-[#D3DADD]">Sua coleção pessoal de playlists</p>
