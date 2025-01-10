@@ -7,6 +7,7 @@ import Profile from "./pages/Profile";
 import Login from "./pages/Login.tsx";
 import Callback from "./pages/Callback.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx"; 
+import Albums from "./pages/Albums.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Artistas />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/artistas/:artistId",
+        element: (
+          <ProtectedRoute>
+            <Albums />
           </ProtectedRoute>
         ),
       },
