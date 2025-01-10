@@ -8,12 +8,10 @@ interface UserProfile {
 }
 
 const Profile = () => {
-  const [userData, setUserData] = useState<UserProfile | null>(null); 
+  const [userData, setUserData] = useState<UserProfile | null>(null);
   const navigate = useNavigate();
 
-
   const token = localStorage.getItem("spotify_access_token");
-
 
   const handleLogout = useCallback(() => {
     localStorage.removeItem("spotify_access_token");
@@ -24,7 +22,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (!token) {
-        navigate("/login"); 
+        navigate("/login");
         return;
       }
 
@@ -35,10 +33,10 @@ const Profile = () => {
           },
         });
 
-        setUserData(response.data); 
+        setUserData(response.data);
       } catch (error) {
         console.error("Erro ao buscar o perfil do usuário:", error);
-        handleLogout(); 
+        handleLogout();
       }
     };
 

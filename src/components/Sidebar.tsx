@@ -32,7 +32,11 @@ const Sidebar = () => {
           <nav className="mt-11">
             <ul className="space-y-6 text-[19px]">
               <li className="flex items-center space-x-4">
-                <img src={isActive("/") ? home : homeInativo} alt="home" className="w-6" />
+                <img
+                  src={isActive("/") ? home : homeInativo}
+                  alt="home"
+                  className="w-6"
+                />
                 <Link
                   to="/"
                   style={{ color: isActive("/") ? "#FFFFFF" : "#949EA2" }}
@@ -42,7 +46,11 @@ const Sidebar = () => {
                 </Link>
               </li>
               <li className="flex items-center space-x-4">
-                <img src={isArtistasActive() ? disc : discInativo} alt="artistas" className="w-6" />
+                <img
+                  src={isArtistasActive() ? disc : discInativo}
+                  alt="artistas"
+                  className="w-6"
+                />
                 <Link
                   to="/artistas"
                   style={{ color: isArtistasActive() ? "#FFFFFF" : "#949EA2" }}
@@ -52,20 +60,32 @@ const Sidebar = () => {
                 </Link>
               </li>
               <li className="flex items-center space-x-4">
-                <img src={isActive("/playlists") ? play : playInativo} alt="playlists" className="w-6" />
+                <img
+                  src={isActive("/playlists") ? play : playInativo}
+                  alt="playlists"
+                  className="w-6"
+                />
                 <Link
                   to="/playlists"
-                  style={{ color: isActive("/playlists") ? "#FFFFFF" : "#949EA2" }}
+                  style={{
+                    color: isActive("/playlists") ? "#FFFFFF" : "#949EA2",
+                  }}
                   className="hover:text-white transition"
                 >
                   Playlists
                 </Link>
               </li>
               <li className="flex items-center space-x-4">
-                <img src={isActive("/profile") ? user : userInativo} alt="perfil" className="w-6" />
+                <img
+                  src={isActive("/profile") ? user : userInativo}
+                  alt="perfil"
+                  className="w-6"
+                />
                 <Link
                   to="/profile"
-                  style={{ color: isActive("/profile") ? "#FFFFFF" : "#949EA2" }}
+                  style={{
+                    color: isActive("/profile") ? "#FFFFFF" : "#949EA2",
+                  }}
                   className="hover:text-white transition"
                 >
                   Perfil
@@ -76,12 +96,12 @@ const Sidebar = () => {
         </div>
       </div>
 
-      <nav className="bg-black text-white fixed w-full z-50 flex items-center justify-between px-4 py-3 md:hidden">        
-          <button onClick={toggleMenu} className="text-white focus:outline-none">
+      <nav className="bg-black text-white fixed w-full z-50 flex items-center justify-between px-4 py-3 md:hidden">
+        <button onClick={toggleMenu} className="text-white focus:outline-none">
           {isMenuOpen ? <FaTimes size={30} /> : <FaBars size={30} />}
-          </button>
-             
-          <img src={spotify} alt="Spotify" className="h-8 mr-4" />
+        </button>
+
+        <img src={spotify} alt="Spotify" className="h-8 mr-4" />
       </nav>
 
       <div
@@ -106,7 +126,11 @@ const Sidebar = () => {
           <nav className="mt-11">
             <ul className="space-y-6 text-[19px]">
               <li onClick={toggleMenu} className="flex items-center space-x-4">
-                <img src={isActive("/") ? home : homeInativo} alt="home" className="w-6" />
+                <img
+                  src={isActive("/") ? home : homeInativo}
+                  alt="home"
+                  className="w-6"
+                />
                 <Link
                   to="/"
                   style={{ color: isActive("/") ? "#FFFFFF" : "#949EA2" }}
@@ -116,7 +140,11 @@ const Sidebar = () => {
                 </Link>
               </li>
               <li onClick={toggleMenu} className="flex items-center space-x-4">
-                <img src={isArtistasActive() ? disc : discInativo} alt="artistas" className="w-6" />
+                <img
+                  src={isArtistasActive() ? disc : discInativo}
+                  alt="artistas"
+                  className="w-6"
+                />
                 <Link
                   to="/artistas"
                   style={{ color: isArtistasActive() ? "#FFFFFF" : "#949EA2" }}
@@ -126,20 +154,32 @@ const Sidebar = () => {
                 </Link>
               </li>
               <li onClick={toggleMenu} className="flex items-center space-x-4">
-                <img src={isActive("/playlists") ? play : playInativo} alt="playlists" className="w-6" />
+                <img
+                  src={isActive("/playlists") ? play : playInativo}
+                  alt="playlists"
+                  className="w-6"
+                />
                 <Link
                   to="/playlists"
-                  style={{ color: isActive("/playlists") ? "#FFFFFF" : "#949EA2" }}
+                  style={{
+                    color: isActive("/playlists") ? "#FFFFFF" : "#949EA2",
+                  }}
                   className="hover:text-white transition"
                 >
                   Playlists
                 </Link>
               </li>
               <li onClick={toggleMenu} className="flex items-center space-x-4">
-                <img src={isActive("/profile") ? user : userInativo} alt="perfil" className="w-6" />
+                <img
+                  src={isActive("/profile") ? user : userInativo}
+                  alt="perfil"
+                  className="w-6"
+                />
                 <Link
                   to="/profile"
-                  style={{ color: isActive("/profile") ? "#FFFFFF" : "#949EA2" }}
+                  style={{
+                    color: isActive("/profile") ? "#FFFFFF" : "#949EA2",
+                  }}
                   className="hover:text-white transition"
                 >
                   Perfil
