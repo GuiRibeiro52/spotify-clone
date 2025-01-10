@@ -15,14 +15,16 @@ const Playlists = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState("");
   const [userId, setUserId] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(1); 
-  const playlistsPerPage = 10; 
+  const [currentPage, setCurrentPage] = useState(1);
+  const playlistsPerPage = 10;
   const token = localStorage.getItem("spotify_access_token");
 
-  
   const indexOfLastPlaylist = currentPage * playlistsPerPage;
   const indexOfFirstPlaylist = indexOfLastPlaylist - playlistsPerPage;
-  const currentPlaylists = playlists.slice(indexOfFirstPlaylist, indexOfLastPlaylist);
+  const currentPlaylists = playlists.slice(
+    indexOfFirstPlaylist,
+    indexOfLastPlaylist,
+  );
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -48,11 +50,14 @@ const Playlists = () => {
       if (!token) return;
 
       try {
-        const response = await axios.get("https://api.spotify.com/v1/me/playlists", {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const response = await axios.get(
+          "https://api.spotify.com/v1/me/playlists",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
 
         setPlaylists(response.data.items);
       } catch (error) {
@@ -75,7 +80,7 @@ const Playlists = () => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       const newPlaylist = response.data;
@@ -89,12 +94,13 @@ const Playlists = () => {
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <div className="bg-[#090707] min-h-screen pl-[250px] text-white font-rubik">
+    <div className="bg-[#090707] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik">
       <div className="p-8">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col space-y-8 sm:space-y-0 sm:flex-row sm:justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold">Minhas Playlists</h1>
             <p className="text-[#D3DADD]">Sua coleção pessoal de playlists</p>
@@ -107,7 +113,6 @@ const Playlists = () => {
           </button>
         </div>
 
-        
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 space-y-4">
           {currentPlaylists.map((playlist) => (
             <div key={playlist.id} className="flex items-center gap-4">
@@ -122,7 +127,9 @@ const Playlists = () => {
               />
               <div>
                 <h2 className="text-sm">{playlist.name}</h2>
-                <p className="text-xs opacity-80">{playlist.owner.display_name}</p>
+                <p className="text-xs opacity-80">
+                  {playlist.owner.display_name}
+                </p>
               </div>
             </div>
           ))}
@@ -130,19 +137,22 @@ const Playlists = () => {
 
         {playlists.length > playlistsPerPage && (
           <div className="flex justify-center mt-20 gap-3">
-            {Array.from({ length: Math.ceil(playlists.length / playlistsPerPage) }, (_, i) => (
-              <button
-                key={i + 1}
-                onClick={() => handlePageChange(i + 1)}
-                className={`px-4 py-2 rounded-md ${
-                  currentPage === i + 1
-                    ? "bg-primary text-black font-bold"
-                    : "bg-[#1A1A1A] text-white font-bold hover:bg-[#333]"
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
+            {Array.from(
+              { length: Math.ceil(playlists.length / playlistsPerPage) },
+              (_, i) => (
+                <button
+                  key={i + 1}
+                  onClick={() => handlePageChange(i + 1)}
+                  className={`px-4 py-2 rounded-md ${
+                    currentPage === i + 1
+                      ? "bg-primary text-black font-bold"
+                      : "bg-[#1A1A1A] text-white font-bold hover:bg-[#333]"
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ),
+            )}
           </div>
         )}
       </div>
@@ -156,7 +166,9 @@ const Playlists = () => {
             >
               ✕
             </button>
-            <h2 className="text-sm font-medium mb-4">Dê um nome a sua playlist</h2>
+            <h2 className="text-sm font-medium mb-4">
+              Dê um nome a sua playlist
+            </h2>
             <input
               type="text"
               value={newPlaylistName}

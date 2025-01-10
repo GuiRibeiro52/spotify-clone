@@ -25,7 +25,6 @@ const Albums = () => {
   const token = localStorage.getItem("spotify_access_token");
   const navigate = useNavigate();
 
-
   const indexOfLastAlbum = currentPage * albumsPerPage;
   const indexOfFirstAlbum = indexOfLastAlbum - albumsPerPage;
   const currentAlbums = albums.slice(indexOfFirstAlbum, indexOfLastAlbum);
@@ -35,22 +34,28 @@ const Albums = () => {
       if (!token || !artistId) return;
 
       try {
-        const artistResponse = await axios.get(`https://api.spotify.com/v1/artists/${artistId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const artistResponse = await axios.get(
+          `https://api.spotify.com/v1/artists/${artistId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
         setArtist(artistResponse.data);
 
-        const albumsResponse = await axios.get(`https://api.spotify.com/v1/artists/${artistId}/albums`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const albumsResponse = await axios.get(
+          `https://api.spotify.com/v1/artists/${artistId}/albums`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              limit: 50,
+              include_groups: "album,single",
+            },
           },
-          params: {
-            limit: 50,
-            include_groups: "album,single",
-          },
-        });
+        );
         setAlbums(albumsResponse.data.items);
       } catch (error) {
         console.error("Erro ao buscar álbuns:", error);
@@ -62,18 +67,20 @@ const Albums = () => {
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <div className="bg-[#090707] min-h-screen pl-[250px] text-white font-rubik">
+    <div className="bg-[#090707] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik">
       <div className="p-8">
         <div className="flex justify-between items-center mt-6">
-            <button
+          <button
             onClick={() => navigate(-1)}
             className="text-white text-lg flex items-center gap-2 "
-            >
-            <img src={arrow} alt="voltar" /><p className="font-bold">{artist?.name}</p>
-            </button>
+          >
+            <img src={arrow} alt="voltar" />
+            <p className="font-bold">{artist?.name}</p>
+          </button>
           {artist?.images[0]?.url && (
             <img
               src={artist.images[0].url}
@@ -83,7 +90,6 @@ const Albums = () => {
           )}
         </div>
 
-       
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 space-y-4 ">
           {currentAlbums.map((album) => (
             <div
@@ -102,22 +108,25 @@ const Albums = () => {
             </div>
           ))}
         </div>
-       
+
         {albums.length > albumsPerPage && (
           <div className="flex justify-center mt-10 gap-3">
-            {Array.from({ length: Math.ceil(albums.length / albumsPerPage) }, (_, i) => (
-              <button
-                key={i + 1}
-                onClick={() => handlePageChange(i + 1)}
-                className={`px-4 py-2 rounded-md ${
-                  currentPage === i + 1
-                    ? "bg-primary text-black font-bold"
-                    : "bg-[#1A1A1A] text-white font-bold hover:bg-[#333]"
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
+            {Array.from(
+              { length: Math.ceil(albums.length / albumsPerPage) },
+              (_, i) => (
+                <button
+                  key={i + 1}
+                  onClick={() => handlePageChange(i + 1)}
+                  className={`px-4 py-2 rounded-md ${
+                    currentPage === i + 1
+                      ? "bg-primary text-black font-bold"
+                      : "bg-[#1A1A1A] text-white font-bold hover:bg-[#333]"
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ),
+            )}
           </div>
         )}
       </div>

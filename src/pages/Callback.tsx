@@ -17,7 +17,7 @@ const Callback = () => {
 
       if (!code) {
         console.error("Código de autorização não encontrado na URL.");
-        navigate("/login"); 
+        navigate("/login");
         return;
       }
 
@@ -35,15 +35,14 @@ const Callback = () => {
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
             },
-          }
+          },
         );
 
         const { access_token, refresh_token } = response.data;
-       
+
         localStorage.setItem("spotify_access_token", access_token);
         localStorage.setItem("spotify_refresh_token", refresh_token);
 
-       
         navigate("/");
       } catch (error) {
         console.error("Erro ao buscar token:", error);
