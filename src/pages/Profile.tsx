@@ -52,7 +52,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="bg-[#090707] min-h-screen flex justify-center items-center pl-[250px]">
+    <div className="bg-[#090707] min-h-screen flex justify-center items-center md:pl-[250px] pt-8 md:pt-0">
       <div className="flex flex-col items-center text-center font-rubik">
         <img
           src={userData.images?.[0]?.url || "https://via.placeholder.com/150"}
