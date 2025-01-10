@@ -8,7 +8,8 @@ const SCOPES = [
   "playlist-read-private",
   "playlist-read-collaborative",
   "playlist-modify-public",
-  "playlist-modify-private"
+  "playlist-modify-private",
+  "user-top-read"
 ];
 
 
