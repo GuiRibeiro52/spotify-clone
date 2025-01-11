@@ -18,7 +18,9 @@ describe("Login Page", () => {
 
   it("deve exibir o texto descritivo", () => {
     render(<Login />);
-    const description = screen.getByText(/Entra com sua conta Spotify clicando no botão abaixo/i);
+    const description = screen.getByText(
+      /Entra com sua conta Spotify clicando no botão abaixo/i,
+    );
     expect(description).toBeInTheDocument();
   });
 
