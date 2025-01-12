@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1736720577806" clover="3.2.0">
-  <project timestamp="1736720577807" name="All files">
-    <metrics statements="761" coveredstatements="482" conditionals="93" coveredconditionals="71" methods="29" coveredmethods="18" elements="883" coveredelements="571" complexity="0" loc="761" ncloc="761" packages="4" files="14" classes="14"/>
+<coverage generated="1736721092964" clover="3.2.0">
+  <project timestamp="1736721092964" name="All files">
+    <metrics statements="761" coveredstatements="492" conditionals="94" coveredconditionals="73" methods="29" coveredmethods="19" elements="884" coveredelements="584" complexity="0" loc="761" ncloc="761" packages="4" files="14" classes="14"/>
     <package name="spotify-clone">
       <metrics statements="22" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="2" coveredmethods="0"/>
       <file name="postcss.config.js" path="C:\Users\Guilherme\Desktop\projetos\spotify-clone\postcss.config.js">
@@ -122,19 +122,19 @@
       </file>
     </package>
     <package name="spotify-clone.src.components">
-      <metrics statements="187" coveredstatements="177" conditionals="37" coveredconditionals="28" methods="5" coveredmethods="4"/>
+      <metrics statements="187" coveredstatements="187" conditionals="38" coveredconditionals="30" methods="5" coveredmethods="5"/>
       <file name="ProtectedRoute.tsx" path="C:\Users\Guilherme\Desktop\projetos\spotify-clone\src\components\ProtectedRoute.tsx">
-        <metrics statements="10" coveredstatements="0" conditionals="1" coveredconditionals="0" methods="1" coveredmethods="0"/>
-        <line num="1" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="2" count="0" type="stmt"/>
-        <line num="8" count="0" type="stmt"/>
-        <line num="9" count="0" type="stmt"/>
-        <line num="11" count="0" type="stmt"/>
-        <line num="12" count="0" type="stmt"/>
-        <line num="13" count="0" type="stmt"/>
-        <line num="15" count="0" type="stmt"/>
-        <line num="16" count="0" type="stmt"/>
-        <line num="18" count="0" type="stmt"/>
+        <metrics statements="10" coveredstatements="10" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="8" count="1" type="cond" truecount="1" falsecount="0"/>
+        <line num="9" count="4" type="stmt"/>
+        <line num="11" count="4" type="cond" truecount="1" falsecount="0"/>
+        <line num="12" count="2" type="stmt"/>
+        <line num="13" count="2" type="stmt"/>
+        <line num="15" count="2" type="stmt"/>
+        <line num="16" count="2" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
       </file>
       <file name="Sidebar.tsx" path="C:\Users\Guilherme\Desktop\projetos\spotify-clone\src\components\Sidebar.tsx">
         <metrics statements="177" coveredstatements="177" conditionals="36" coveredconditionals="28" methods="4" coveredmethods="4"/>
