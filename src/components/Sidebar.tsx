@@ -10,6 +10,7 @@ import disc from "../assets/images/disc.png";
 import discInativo from "../assets/images/disc-inativo.png";
 import user from "../assets/images/user.png";
 import userInativo from "../assets/images/user-inativo.png";
+import down from "../assets/images/arrow-down.png";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -29,7 +30,7 @@ const Sidebar = () => {
           <div className="mt-8">
             <img src={spotify} alt="Spotify" className="w-44" />
           </div>
-          <nav className="mt-11">
+            <nav className="mt-11">
             <ul className="space-y-6 text-[19px]">
               <li className="flex items-center space-x-4">
                 <img
@@ -92,15 +93,18 @@ const Sidebar = () => {
                 </Link>
               </li>
             </ul>
-          </nav>
+          </nav>  
         </div>
+        <div className="mt-auto mb-5 flex items-center gap-6 p-4 cursor-pointer">
+          <img src={down} alt="dowload PWA" />
+          <span className="text-[19px]">Instalar PWA</span>
+        </div>          
       </div>
 
       <nav className="bg-black text-white fixed w-full z-50 flex items-center justify-between px-4 py-3 md:hidden">
         <button onClick={toggleMenu} className="text-white focus:outline-none">
           {isMenuOpen ? <FaTimes size={30} /> : <FaBars size={30} />}
         </button>
-
         <img src={spotify} alt="Spotify" className="h-8 mr-4" />
       </nav>
 
@@ -118,8 +122,7 @@ const Sidebar = () => {
         <div
           className={`w-[250px] h-screen bg-black text-white p-4 transform transition-transform duration-1000 font-bold ${
             isMenuOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
-        >
+          }`}>            
           <div className="mt-8">
             <img src={spotify} alt="Spotify" className="w-44 mt-12" />
           </div>
