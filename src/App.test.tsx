@@ -22,7 +22,7 @@ describe("Componente App", () => {
           </Route>
           <Route path="/login" element={<h1>Página de Login</h1>} />
         </Routes>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
   };
 
