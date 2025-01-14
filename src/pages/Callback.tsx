@@ -2,9 +2,11 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const CLIENT_ID = "e91af643cc464215869afe53be7c4cd4";
-const CLIENT_SECRET = "01fe749dbb8c451a941e9b71058bacd8";
-const REDIRECT_URI = "http://localhost:5173/callback";
+const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
+const CLIENT_SECRET = import.meta.env.VITE_CLIENT_SECRET;
+const REDIRECT_URI = import.meta.env.MODE === "development"
+  ? "http://localhost:5173/callback"
+  : "https://spotify-clone-ten-gilt.vercel.app/callback";
 const TOKEN_URL = "https://accounts.spotify.com/api/token";
 
 const Callback = () => {
@@ -28,14 +30,14 @@ const Callback = () => {
             grant_type: "authorization_code",
             code,
             redirect_uri: REDIRECT_URI,
-            client_id: CLIENT_ID,
-            client_secret: CLIENT_SECRET,
+            client_id: CLIENT_ID!,
+            client_secret: CLIENT_SECRET!,
           }),
           {
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
             },
-          },
+          }
         );
 
         const { access_token, refresh_token } = response.data;
@@ -53,7 +55,7 @@ const Callback = () => {
   }, [navigate]);
 
   return (
-    <div className="h-screen flex items-center justify-center bg-[#090707] text-white">
+    <div className="h-screen flex items-center justify-center font-rubik text-3xl bg-[#090707] text-white">
       <h1>Autenticando...</h1>
     </div>
   );
