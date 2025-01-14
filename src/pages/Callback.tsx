@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 
 const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
 const CLIENT_SECRET = import.meta.env.VITE_CLIENT_SECRET;
-const REDIRECT_URI = import.meta.env.MODE === "development"
-  ? "http://localhost:5173/callback"
-  : "https://spotify-clone-ten-gilt.vercel.app/callback";
+const REDIRECT_URI =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:5173/callback"
+    : "https://spotify-clone-ten-gilt.vercel.app/callback";
 const TOKEN_URL = "https://accounts.spotify.com/api/token";
 
 const Callback = () => {
@@ -37,7 +38,7 @@ const Callback = () => {
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
             },
-          }
+          },
         );
 
         const { access_token, refresh_token } = response.data;
