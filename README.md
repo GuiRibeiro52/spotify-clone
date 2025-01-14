@@ -1,50 +1,85 @@
-# React + TypeScript + Vite
+![Badge Finalizado](http://img.shields.io/static/v1?label=STATUS&message=Finalizado&color=GREEN&style=for-the-badge)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![REACT](https://img.shields.io/badge/react-%230EA5E9.svg?style=for-the-badge&logo=react&logoColor=white)  ![VITE](https://img.shields.io/badge/vite-%239755FF.svg?style=for-the-badge&logo=vite&logoColor=white)  ![TYPESCRIPT](https://img.shields.io/badge/typescript-%230EA5E9.svg?style=for-the-badge&logo=typescript&logoColor=white) ![TAILWINDCSS](https://img.shields.io/badge/tailwindcss-%230EA5E9.svg?style=for-the-badge&logo=tailwindcss&logoColor=white)  
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# Visão Geral
+Spotify-clone é uma aplicação desenvolvida para oferecer streaming de músicas online. A aplicação apresenta uma interface inspirada no site oficial, com recursos interativos como visualização das playlists do usuário, artistas que mais ouvimos e seus álbuns.
 
-## Expanding the ESLint configuration
+![Aplicação Spotify](/src/assets/spotify-clone.png)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+# Tecnologias
+O projeto foi desenvolvido com ReactTS + Vite e Tailwindcss, utilizada a api [Spotify](https://developer.spotify.com/documentation/web-api) para autenticação do usuário, foi usado tecnologias modernas para proporcionar uma experiência rica e interativa aos usuários.
 
-- Configure the top-level `parserOptions` property like this:
+As seguintes tecnologias foram usadas na construção do projeto:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
+- [React](https://react.dev/)
+- [Typescript](https://www.typescriptlang.org/)
+- [Vite](https://vitejs.dev/)
+- [Tailwind](https://tailwindcss.com/)
+
+# Requisitos obrigatórios
+
+- [x] Seguimentação de commits
+- [x] Lint
+- [x] Autenticação via Spotify
+- [x] Listar Artistas
+- [x] Listar albuns de um artista
+- [x] Utilizar paginação
+- [ ] Funcionamento offline
+- [x] Tester unitários
+- [ ] Deploy da aplicação (Vercel) 
+  
+# Requisitos Bônus
+
+- [ ] Testes E2E
+- [ ] Integração com Sentry
+- [ ] CI / CD
+- [x] Responsividade (Celular e tablet)
+- [ ] Qualidade de código (Sonarqube)
+- [x] PWA
+
+# Instruções de uso
+
+## Pré-requisitos:
+
+- Navegador web (Chrome, Firefox, Safari, etc.)
+- Git
+  
+## Clone o repositório:
+
+```
+git clone https://github.com/GuiRibeiro52/spotify-clone.git
+```
+## Navegue até o diretório raíz do projeto:
+```
+cd spotify-clone
+```
+## Instale as dependências do projeto:
+```
+npm install
+```
+## Rode o comando para abrir servidor de desenvolvimento:
+```
+npm run dev
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
 
-```js
-// eslint.config.js
-import react from "eslint-plugin-react";
+# Contribuição
+Contribuições são sempre bem-vindas!
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: "18.3" } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs["jsx-runtime"].rules,
-  },
-});
-```
+- Faça o fork do projeto
+
+- Crie uma branch para sua feature:
+  ```
+  git checkout -b feature/fooBar
+  ```
+- Faça o commit das suas mudanças:
+  ```
+  git commit -am 'Add some fooBar
+  ```
+- Realize o push para o branch:
+  ```
+  git push origin feature/fooBar
+  ```
+- Abra o Pull Request
