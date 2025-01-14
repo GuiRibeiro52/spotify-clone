@@ -5,6 +5,9 @@ import Artistas from "./pages/Artistas";
 import Playlists from "./pages/Playlists";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login.tsx";
+import Callback from "./pages/Callback.tsx";
+import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import Albums from "./pages/Albums.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -13,23 +16,46 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Home />
+        element: (
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/artistas",
-        element: <Artistas />
+        element: (
+          <ProtectedRoute>
+            <Artistas />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/artistas/:artistId",
+        element: (
+          <ProtectedRoute>
+            <Albums />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/playlists",
-        element: <Playlists />
+        element: (
+          <ProtectedRoute>
+            <Playlists />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/profile",
-        element: <Profile />
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
-  {path: "/login", element: <Login />}
+  { path: "/login", element: <Login /> },
+  { path: "/callback", element: <Callback /> },
 ]);
-
-

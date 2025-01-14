@@ -1,17 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      fontFamily:{
-        dm: ['DM Sans', 'sans-serif'],
+      fontFamily: {
+        dm: ["DM Sans", "sans-serif"],
+        rubik: ["Rubik", "sans-serif"],
       },
-      colors:{
-        primary: '#57B660'
-      }
+      colors: {
+        primary: "#57B660",
+      },
     },
   },
   plugins: [],
