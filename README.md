@@ -28,7 +28,7 @@ As seguintes tecnologias foram usadas na construção do projeto:
 - [x] Utilizar paginação
 - [ ] Funcionamento offline
 - [x] Tester unitários
-- [ ] Deploy da aplicação (Vercel) 
+- [x] Deploy da aplicação (Vercel) 
   
 # Requisitos Bônus
 
