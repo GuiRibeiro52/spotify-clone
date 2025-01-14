@@ -133,7 +133,7 @@ const Playlists = () => {
                     : "https://via.placeholder.com/64"
                 }
                 alt={playlist.name}
-                className="w-16 h-16"
+                className="w-20 h-20 rounded-lg"
               />
               <div>
                 <h2 className="text-sm">{playlist.name}</h2>

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-
 import arrow from "../assets/images/arrow-left.png";
 
 interface Track {
   id: string;
   name: string;
   artists: { name: string }[];
+  duration_ms: number;
   album: { images: { url: string }[] };
 }
 
@@ -16,6 +16,7 @@ interface Playlist {
   name: string;
   images: { url: string }[];
   tracks: { total: number };
+  description: string;
 }
 
 const PlaylistDetails = () => {
@@ -32,13 +33,8 @@ const PlaylistDetails = () => {
     const fetchPlaylistDetails = async () => {
       const token = localStorage.getItem("spotify_access_token");
 
-      if (!token) {
-        console.error("Token não encontrado.");
-        return;
-      }
-
-      if (!playlistId) {
-        console.error("ID da playlist não encontrado.");
+      if (!token || !playlistId) {
+        console.error("Token ou ID da playlist não encontrado.");
         return;
       }
 
@@ -55,7 +51,6 @@ const PlaylistDetails = () => {
         );
 
         setPlaylist(response.data);
-
         await fetchAllTracks(response.data.tracks.total, token);
       } catch (error) {
         console.error("Erro ao buscar detalhes da playlist:", error);
@@ -91,6 +86,12 @@ const PlaylistDetails = () => {
     fetchPlaylistDetails();
   }, [playlistId]);
 
+  const formatDuration = (ms: number) => {
+    const minutes = Math.floor(ms / 60000);
+    const seconds = ((ms % 60000) / 1000).toFixed(0);
+    return `${minutes}:${parseInt(seconds) < 10 ? "0" : ""}${seconds}`;
+  };
+
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -117,49 +118,71 @@ const PlaylistDetails = () => {
   }
 
   return (
-    <div className="bg-[#090707] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik p-8">
-      <div className="p-8">
-        <div className="flex justify-between items-center mt-6">
-          <button
-            onClick={() => navigate(-1)}
-            className="text-white text-lg flex items-center gap-2"
-          >
-            <img src={arrow} alt="voltar" />
-            <p className="font-bold">{playlist?.name}</p>
-          </button>
-          {playlist?.images[0]?.url && (
-            <img
-              src={playlist.images[0].url}
-              alt={playlist.name}
-              className="w-16 h-16 rounded-full mr-10"
-            />
-          )}
+    <div className="bg-[#121212] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik">
+      <div
+        className="p-8"
+        style={{
+          background: `linear-gradient(to bottom, rgba(0,0,0,0.8), #121212), url(${playlist.images[0]?.url}) no-repeat center/cover`,
+          borderBottom: "1px solid #333",
+        }}
+      >
+        <button
+          onClick={() => navigate(-1)}
+          className="text-white text-lg flex items-center gap-2 mb-6"
+        >
+          <img src={arrow} alt="Voltar" />
+          <p className="font-bold">Voltar</p>
+        </button>
+
+        <div className="flex flex-col sm:flex-row items-center gap-6">
+          <img
+            src={playlist.images[0]?.url || "https://via.placeholder.com/200"}
+            alt={playlist.name}
+            className="w-52 h-52 shadow-lg rounded-lg"
+          />
+
+          <div>
+            <p className="uppercase text-sm font-semibold">Playlist</p>
+            <h1 className="text-xl sm:text-6xl font-extrabold mt-2">
+              {playlist.name}
+            </h1>
+            <p className="mt-2 text-sm text-[#B3B3B3]">
+              {playlist.tracks.total} músicas
+            </p>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 space-y-4">
-          {currentTracks.map((track) => (
-            <div
-              key={track.id}
-              className="flex items-center gap-4 cursor-pointer hover:bg-[#1A1A1A] p-2 rounded-lg transition"
-            >
-              <img
-                src={
-                  track.album.images.length > 0
-                    ? track.album.images[0].url
-                    : "https://via.placeholder.com/150"
-                }
-                alt={track.name}
-                className="w-20 h-20"
-              />
-              <div>
-                <h2 className="text-sm font-semibold">{track.name}</h2>
-                <p className="text-xs text-[#B3B3B3]">
-                  {track.artists.map((artist) => artist.name).join(", ")}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+        <button className="mt-6 bg-primary text-black font-bold px-8 py-3 rounded-full hover:bg-[#1ed760] transition duration-300">
+          Play
+        </button>
+      </div>
+
+      <div className="p-8">
+        <table className="w-full text-left">
+          <thead>
+            <tr className="border-b border-[#333]">
+              <th className="py-2 px-4">#</th>
+              <th className="py-2 px-4">Título</th>
+              <th className="py-2 px-4 hidden sm:contents">Duração</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentTracks.map((track, index) => (
+              <tr
+                key={track.id}
+                className="hover:bg-[#1A1A1A] transition duration-300 cursor-pointer"
+              >
+                <td className="py-2 px-4">
+                  {index + 1 + (currentPage - 1) * tracksPerPage}
+                </td>
+                <td className="py-2 px-4"><p>{track.name}</p><span className="text-sm text-[#B3B3B3]">{track.artists.map((artist) => artist.name).join(", ")}</span></td>
+                <td className="py-2 px-4 hidden sm:contents">
+                  {formatDuration(track.duration_ms)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
         {tracks.length > tracksPerPage && (
           <div className="flex justify-center mt-10 gap-3">

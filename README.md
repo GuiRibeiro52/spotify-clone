@@ -28,7 +28,7 @@ As seguintes tecnologias foram usadas na construção do projeto:
 - [x] Listar albuns de um artista
 - [x] Utilizar paginação
 - [ ] Funcionamento offline
-- [x] Tester unitários
+- [x] Testes unitários
 - [x] Deploy da aplicação (Vercel)
 
 # Requisitos Bônus
@@ -37,8 +37,10 @@ As seguintes tecnologias foram usadas na construção do projeto:
 - [ ] Integração com Sentry
 - [ ] CI / CD
 - [x] Responsividade (Celular e tablet)
+- [x] Lista faixas de um álbum
+- [x] Lista faixas de uma playlist
 - [ ] Qualidade de código (Sonarqube)
-- [x] PWA
+- [ ] PWA
 
 # Instruções de uso
 
