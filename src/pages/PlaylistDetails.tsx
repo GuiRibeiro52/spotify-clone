@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+
+import arrow from "../assets/images/arrow-left.png";
 
 interface Track {
   id: string;
@@ -13,13 +15,18 @@ interface Playlist {
   id: string;
   name: string;
   images: { url: string }[];
-  tracks: { items: { track: Track }[] };
+  tracks: { total: number };
 }
 
 const PlaylistDetails = () => {
   const { playlistId } = useParams<{ playlistId: string }>();
   const [playlist, setPlaylist] = useState<Playlist | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [tracks, setTracks] = useState<Track[]>([]);
+  const navigate = useNavigate();
+
+  const tracksPerPage = 50;
 
   useEffect(() => {
     const fetchPlaylistDetails = async () => {
@@ -48,6 +55,8 @@ const PlaylistDetails = () => {
         );
 
         setPlaylist(response.data);
+
+        await fetchAllTracks(response.data.tracks.total, token);
       } catch (error) {
         console.error("Erro ao buscar detalhes da playlist:", error);
       } finally {
@@ -55,8 +64,41 @@ const PlaylistDetails = () => {
       }
     };
 
+    const fetchAllTracks = async (totalTracks: number, token: string) => {
+      const limit = 100;
+      let allTracks: Track[] = [];
+
+      for (let offset = 0; offset < totalTracks; offset += limit) {
+        const response = await axios.get(
+          `https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=${limit}&offset=${offset}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+
+        const fetchedTracks = response.data.items.map(
+          (item: { track: Track }) => item.track,
+        );
+
+        allTracks = [...allTracks, ...fetchedTracks];
+      }
+
+      setTracks(allTracks);
+    };
+
     fetchPlaylistDetails();
   }, [playlistId]);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const indexOfLastTrack = currentPage * tracksPerPage;
+  const indexOfFirstTrack = indexOfLastTrack - tracksPerPage;
+  const currentTracks = tracks.slice(indexOfFirstTrack, indexOfLastTrack);
 
   if (loading) {
     return (
@@ -76,37 +118,69 @@ const PlaylistDetails = () => {
 
   return (
     <div className="bg-[#090707] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik p-8">
-      <div className="flex items-center gap-6 mb-8">
-        <img
-          src={
-            playlist.images && playlist.images.length > 0
-              ? playlist.images[0].url
-              : "https://via.placeholder.com/150"
-          }
-          alt={playlist.name}
-          className="w-32 h-32 rounded-lg"
-        />
-        <h1 className="text-3xl font-bold">{playlist.name}</h1>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {playlist.tracks.items.map(({ track }) => (
-          <div key={track.id} className="bg-[#181818] p-4 rounded-lg">
+      <div className="p-8">
+        <div className="flex justify-between items-center mt-6">
+          <button
+            onClick={() => navigate(-1)}
+            className="text-white text-lg flex items-center gap-2"
+          >
+            <img src={arrow} alt="voltar" />
+            <p className="font-bold">{playlist?.name}</p>
+          </button>
+          {playlist?.images[0]?.url && (
             <img
-              src={
-                track.album.images.length > 0
-                  ? track.album.images[0].url
-                  : "https://via.placeholder.com/150"
-              }
-              alt={track.name}
-              className="w-full h-32 object-cover rounded-md mb-2"
+              src={playlist.images[0].url}
+              alt={playlist.name}
+              className="w-16 h-16 rounded-full mr-10"
             />
-            <h2 className="text-sm font-semibold">{track.name}</h2>
-            <p className="text-xs text-gray-400">
-              {track.artists.map((artist) => artist.name).join(", ")}
-            </p>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 space-y-4">
+          {currentTracks.map((track) => (
+            <div
+              key={track.id}
+              className="flex items-center gap-4 cursor-pointer hover:bg-[#1A1A1A] p-2 rounded-lg transition"
+            >
+              <img
+                src={
+                  track.album.images.length > 0
+                    ? track.album.images[0].url
+                    : "https://via.placeholder.com/150"
+                }
+                alt={track.name}
+                className="w-20 h-20"
+              />
+              <div>
+                <h2 className="text-sm font-semibold">{track.name}</h2>
+                <p className="text-xs text-[#B3B3B3]">
+                  {track.artists.map((artist) => artist.name).join(", ")}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {tracks.length > tracksPerPage && (
+          <div className="flex justify-center mt-10 gap-3">
+            {Array.from(
+              { length: Math.ceil(tracks.length / tracksPerPage) },
+              (_, i) => (
+                <button
+                  key={i + 1}
+                  onClick={() => handlePageChange(i + 1)}
+                  className={`px-4 py-2 rounded-md ${
+                    currentPage === i + 1
+                      ? "bg-primary text-black font-bold"
+                      : "bg-[#1A1A1A] text-white font-bold hover:bg-[#333]"
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ),
+            )}
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
