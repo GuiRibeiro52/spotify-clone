@@ -28,7 +28,7 @@ const Login = () => {
     <div className="bg-[#090707] h-screen flex flex-col justify-center items-center font-rubik">
       <img src={spotify} alt="Spotify Logo" className="w-44 mb-6" />
       <h2 className="font-semibold text-white text-center mb-6">
-        Entra com sua conta Spotify clicando no botão abaixo
+        Entre com sua conta Spotify clicando no botão abaixo
       </h2>
       <button
         onClick={handleLogin}

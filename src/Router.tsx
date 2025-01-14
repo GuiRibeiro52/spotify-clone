@@ -9,6 +9,7 @@ import Callback from "./pages/Callback.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Albums from "./pages/Albums.tsx";
 import PlaylistDetails from "./pages/PlaylistDetails.tsx";
+import AlbumDetails from "./pages/AlbumDetails.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +37,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Albums />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/album/:albumId",
+        element: (
+          <ProtectedRoute>
+            <AlbumDetails />
           </ProtectedRoute>
         ),
       },

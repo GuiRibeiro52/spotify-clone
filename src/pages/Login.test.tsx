@@ -19,7 +19,7 @@ describe("Login Page", () => {
   it("deve exibir o texto descritivo", () => {
     render(<Login />);
     const description = screen.getByText(
-      /Entra com sua conta Spotify clicando no botão abaixo/i,
+      /Entre com sua conta Spotify clicando no botão abaixo/i,
     );
     expect(description).toBeInTheDocument();
   });
@@ -36,8 +36,11 @@ describe("Login Page", () => {
 
     fireEvent.click(button);
 
-    const CLIENT_ID = "e91af643cc464215869afe53be7c4cd4";
-    const REDIRECT_URI = "http://localhost:5173/callback";
+    const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
+    const REDIRECT_URI =
+    import.meta.env.MODE === "development"
+      ? "http://localhost:5173/callback"
+      : "https://spotify-clone-ten-gilt.vercel.app/callback";
     const SCOPES = [
       "user-read-private",
       "user-read-email",

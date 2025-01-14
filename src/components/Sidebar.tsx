@@ -16,7 +16,9 @@ const Sidebar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const isActive = (path: string) => location.pathname === path;
-  const isArtistasActive = () => location.pathname.startsWith("/artistas");
+  const isArtistasActive = () =>
+    location.pathname.startsWith("/artistas") ||
+    location.pathname.startsWith("/album");
   const isPlaylistsActive = () => location.pathname.startsWith("/playlists");
 
   const toggleMenu = () => {
