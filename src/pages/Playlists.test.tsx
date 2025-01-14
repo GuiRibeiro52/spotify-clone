@@ -38,7 +38,7 @@ describe("Página Playlists", () => {
     fireEvent.click(createButton);
 
     expect(
-      await screen.findByText("Dê um nome a sua playlist"),
+      await screen.findByText("Dê um nome à sua playlist"),
     ).toBeInTheDocument();
 
     const closeButton = screen.getByText("✕");

@@ -16,7 +16,10 @@ const Sidebar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const isActive = (path: string) => location.pathname === path;
-  const isArtistasActive = () => location.pathname.startsWith("/artistas");
+  const isArtistasActive = () =>
+    location.pathname.startsWith("/artistas") ||
+    location.pathname.startsWith("/album");
+  const isPlaylistsActive = () => location.pathname.startsWith("/playlists");
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -61,14 +64,14 @@ const Sidebar = () => {
               </li>
               <li className="flex items-center space-x-4">
                 <img
-                  src={isActive("/playlists") ? play : playInativo}
+                  src={isPlaylistsActive() ? play : playInativo}
                   alt="playlists"
                   className="w-6"
                 />
                 <Link
                   to="/playlists"
                   style={{
-                    color: isActive("/playlists") ? "#FFFFFF" : "#949EA2",
+                    color: isPlaylistsActive() ? "#FFFFFF" : "#949EA2",
                   }}
                   className="hover:text-white transition"
                 >

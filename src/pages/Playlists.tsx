@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface Playlist {
   id: string;
@@ -17,6 +18,7 @@ const Playlists = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const playlistsPerPage = 10;
+  const navigate = useNavigate();
   const token = localStorage.getItem("spotify_access_token");
 
   const indexOfLastPlaylist = currentPage * playlistsPerPage;
@@ -97,6 +99,10 @@ const Playlists = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handlePlaylistClick = (playlistId: string) => {
+    navigate(`/playlists/${playlistId}`);
+  };
+
   return (
     <div className="bg-[#090707] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik">
       <div className="p-8">
@@ -115,7 +121,11 @@ const Playlists = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 space-y-4">
           {currentPlaylists.map((playlist) => (
-            <div key={playlist.id} className="flex items-center gap-4">
+            <div
+              key={playlist.id}
+              onClick={() => handlePlaylistClick(playlist.id)}
+              className="flex items-center gap-4 cursor-pointer hover:bg-[#1A1A1A] p-2 rounded-md transition duration-300"
+            >
               <img
                 src={
                   Array.isArray(playlist.images) && playlist.images.length > 0
@@ -123,7 +133,7 @@ const Playlists = () => {
                     : "https://via.placeholder.com/64"
                 }
                 alt={playlist.name}
-                className="w-16 h-16"
+                className="w-20 h-20 rounded-lg"
               />
               <div>
                 <h2 className="text-sm">{playlist.name}</h2>
@@ -167,7 +177,7 @@ const Playlists = () => {
               ✕
             </button>
             <h2 className="text-sm font-medium mb-4">
-              Dê um nome a sua playlist
+              Dê um nome à sua playlist
             </h2>
             <input
               type="text"

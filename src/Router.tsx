@@ -8,6 +8,8 @@ import Login from "./pages/Login.tsx";
 import Callback from "./pages/Callback.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Albums from "./pages/Albums.tsx";
+import PlaylistDetails from "./pages/PlaylistDetails.tsx";
+import AlbumDetails from "./pages/AlbumDetails.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -39,10 +41,26 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: "/album/:albumId",
+        element: (
+          <ProtectedRoute>
+            <AlbumDetails />
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: "/playlists",
         element: (
           <ProtectedRoute>
             <Playlists />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/playlists/:playlistId",
+        element: (
+          <ProtectedRoute>
+            <PlaylistDetails />
           </ProtectedRoute>
         ),
       },

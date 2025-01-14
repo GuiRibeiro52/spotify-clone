@@ -70,6 +70,10 @@ const Albums = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handleAlbumClick = (albumId: string) => {
+    navigate(`/album/${albumId}`);
+  };
+
   return (
     <div className="bg-[#090707] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik">
       <div className="p-8">
@@ -90,16 +94,17 @@ const Albums = () => {
           )}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 space-y-4 ">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 space-y-4">
           {currentAlbums.map((album) => (
             <div
               key={album.id}
+              onClick={() => handleAlbumClick(album.id)}
               className="flex items-center gap-4 cursor-pointer hover:bg-[#1A1A1A] p-2 rounded-lg transition"
             >
               <img
                 src={album.images[0]?.url || "https://via.placeholder.com/64"}
                 alt={album.name}
-                className="w-20 h-20"
+                className="w-20 h-20 rounded-lg"
               />
               <div>
                 <h3 className="text-lg font-semibold">{album.name}</h3>

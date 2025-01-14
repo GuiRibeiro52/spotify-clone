@@ -1,9 +1,10 @@
 import spotify from "../assets/images/SpotifyLogo.png";
 
 const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
-const REDIRECT_URI = import.meta.env.MODE === "development"
-  ? "http://localhost:5173/callback"
-  : "https://spotify-clone-ten-gilt.vercel.app/callback";
+const REDIRECT_URI =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:5173/callback"
+    : "https://spotify-clone-ten-gilt.vercel.app/callback";
 const SCOPES = [
   "user-read-private",
   "user-read-email",
@@ -27,7 +28,7 @@ const Login = () => {
     <div className="bg-[#090707] h-screen flex flex-col justify-center items-center font-rubik">
       <img src={spotify} alt="Spotify Logo" className="w-44 mb-6" />
       <h2 className="font-semibold text-white text-center mb-6">
-        Entra com sua conta Spotify clicando no botão abaixo
+        Entre com sua conta Spotify clicando no botão abaixo
       </h2>
       <button
         onClick={handleLogin}
