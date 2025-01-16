@@ -10,6 +10,8 @@ import disc from "../assets/images/disc.png";
 import discInativo from "../assets/images/disc-inativo.png";
 import user from "../assets/images/user.png";
 import userInativo from "../assets/images/user-inativo.png";
+import down from "../assets/images/arrow-down.png";
+
 
 const Sidebar = () => {
   const location = useLocation();
@@ -97,6 +99,9 @@ const Sidebar = () => {
             </ul>
           </nav>
         </div>
+        <div>
+          <button className="flex items-center gap-7 p-4 text-[19px]"><img src={down} alt="Install PWA" /> Instalar PWA</button>
+        </div>
       </div>
 
       <nav className="bg-black text-white fixed w-full z-50 flex items-center justify-between px-4 py-3 md:hidden">
@@ -108,90 +113,106 @@ const Sidebar = () => {
       </nav>
 
       <div
-        className={`fixed inset-0 z-40 flex transition-opacity duration-1000 ${
-          isMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
-      >
-        <div
-          onClick={toggleMenu}
-          className={`fixed inset-0 bg-black transition-opacity duration-1000 ${
-            isMenuOpen ? "bg-opacity-40" : "bg-opacity-0"
-          }`}
-        ></div>
-        <div
-          className={`w-[250px] h-screen bg-black text-white p-4 transform transition-transform duration-1000 font-bold ${
-            isMenuOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
-        >
-          <div className="mt-8">
-            <img src={spotify} alt="Spotify" className="w-44 mt-12" />
-          </div>
-          <nav className="mt-11">
-            <ul className="space-y-6 text-[19px]">
-              <li onClick={toggleMenu} className="flex items-center space-x-4">
-                <img
-                  src={isActive("/") ? home : homeInativo}
-                  alt="home"
-                  className="w-6"
-                />
-                <Link
-                  to="/"
-                  style={{ color: isActive("/") ? "#FFFFFF" : "#949EA2" }}
-                  className="hover:text-white transition"
-                >
-                  Home
-                </Link>
-              </li>
-              <li onClick={toggleMenu} className="flex items-center space-x-4">
-                <img
-                  src={isArtistasActive() ? disc : discInativo}
-                  alt="artistas"
-                  className="w-6"
-                />
-                <Link
-                  to="/artistas"
-                  style={{ color: isArtistasActive() ? "#FFFFFF" : "#949EA2" }}
-                  className="hover:text-white transition"
-                >
-                  Artistas
-                </Link>
-              </li>
-              <li onClick={toggleMenu} className="flex items-center space-x-4">
-                <img
-                  src={isActive("/playlists") ? play : playInativo}
-                  alt="playlists"
-                  className="w-6"
-                />
-                <Link
-                  to="/playlists"
-                  style={{
-                    color: isActive("/playlists") ? "#FFFFFF" : "#949EA2",
-                  }}
-                  className="hover:text-white transition"
-                >
-                  Playlists
-                </Link>
-              </li>
-              <li onClick={toggleMenu} className="flex items-center space-x-4">
-                <img
-                  src={isActive("/profile") ? user : userInativo}
-                  alt="perfil"
-                  className="w-6"
-                />
-                <Link
-                  to="/profile"
-                  style={{
-                    color: isActive("/profile") ? "#FFFFFF" : "#949EA2",
-                  }}
-                  className="hover:text-white transition"
-                >
-                  Perfil
-                </Link>
-              </li>
-            </ul>
-          </nav>
-        </div>
+  className={`fixed inset-0 z-40 flex transition-opacity duration-1000 ${
+    isMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+  }`}
+>
+  <div
+    onClick={toggleMenu}
+    className={`fixed inset-0 bg-black transition-opacity duration-1000 ${
+      isMenuOpen ? "bg-opacity-40" : "bg-opacity-0"
+    }`}
+  ></div>
+
+  <div
+    className={`w-[250px] h-screen bg-black text-white p-4 transform font-dm transition-transform duration-1000 font-bold flex flex-col justify-between ${
+      isMenuOpen ? "translate-x-0" : "-translate-x-full"
+    }`}
+  >
+    <div>
+      <div className="mt-8">
+        <img src={spotify} alt="Spotify" className="w-44 mt-12" />
       </div>
+
+      <nav className="mt-11">
+        <ul className="space-y-6 text-[19px]">
+          <li onClick={toggleMenu} className="flex items-center space-x-4">
+            <img
+              src={isActive("/") ? home : homeInativo}
+              alt="home"
+              className="w-6"
+            />
+            <Link
+              to="/"
+              style={{ color: isActive("/") ? "#FFFFFF" : "#949EA2" }}
+              className="hover:text-white transition"
+            >
+              Home
+            </Link>
+          </li>
+
+          <li onClick={toggleMenu} className="flex items-center space-x-4">
+            <img
+              src={isArtistasActive() ? disc : discInativo}
+              alt="artistas"
+              className="w-6"
+            />
+            <Link
+              to="/artistas"
+              style={{ color: isArtistasActive() ? "#FFFFFF" : "#949EA2" }}
+              className="hover:text-white transition"
+            >
+              Artistas
+            </Link>
+          </li>
+
+          <li onClick={toggleMenu} className="flex items-center space-x-4">
+            <img
+              src={isActive("/playlists") ? play : playInativo}
+              alt="playlists"
+              className="w-6"
+            />
+            <Link
+              to="/playlists"
+              style={{
+                color: isActive("/playlists") ? "#FFFFFF" : "#949EA2",
+              }}
+              className="hover:text-white transition"
+            >
+              Playlists
+            </Link>
+          </li>
+
+          <li onClick={toggleMenu} className="flex items-center space-x-4">
+            <img
+              src={isActive("/profile") ? user : userInativo}
+              alt="perfil"
+              className="w-6"
+            />
+            <Link
+              to="/profile"
+              style={{
+                color: isActive("/profile") ? "#FFFFFF" : "#949EA2",
+              }}
+              className="hover:text-white transition"
+            >
+              Perfil
+            </Link>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <div className="mb-4">
+      <button
+        className="flex items-center gap-7 p-4 text-[19px]"
+      >
+        <img src={down} alt="Install PWA" className="w-6" />
+        Instalar PWA
+      </button>
+    </div>
+  </div>
+</div>
     </>
   );
 };
