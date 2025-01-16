@@ -40,7 +40,7 @@ As seguintes tecnologias foram usadas na construção do projeto:
 - [x] Lista faixas de um álbum
 - [x] Lista faixas de uma playlist
 - [ ] Qualidade de código (Sonarqube)
-- [ ] PWA
+- [x] PWA
 
 # Instruções de uso
 
