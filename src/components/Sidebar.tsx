@@ -22,6 +22,7 @@ const Sidebar = () => {
     location.pathname.startsWith("/artistas") ||
     location.pathname.startsWith("/album");
   const isPlaylistsActive = () => location.pathname.startsWith("/playlists");
+  const isPodcastsActive = () => location.pathname.startsWith("/podcasts");
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -82,13 +83,13 @@ const Sidebar = () => {
               </li>
               <li className="flex items-center space-x-4">
                 <img
-                  src={isActive("/podcasts") ? home : homeInativo}
+                  src={isPodcastsActive() ? home : homeInativo}
                   alt="podcast"
                   className="w-6"
                 />
                 <Link
                   to="/podcasts"
-                  style={{ color: isActive("/podcasts") ? "#FFFFFF" : "#949EA2" }}
+                  style={{ color: isPodcastsActive() ? "#FFFFFF" : "#949EA2" }}
                   className="hover:text-white transition"
                 >
                   Podcasts

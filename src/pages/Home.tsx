@@ -187,6 +187,7 @@ const Home = () => {
                   {podcasts.map((podcast) => (
                     <div
                       key={podcast.id}
+                      onClick={() => navigate(`/podcasts/${podcast.id}`)}
                       className="cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg"
                     >
                       <img
