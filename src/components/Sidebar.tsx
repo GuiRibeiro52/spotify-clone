@@ -82,6 +82,20 @@ const Sidebar = () => {
               </li>
               <li className="flex items-center space-x-4">
                 <img
+                  src={isActive("/podcasts") ? home : homeInativo}
+                  alt="podcast"
+                  className="w-6"
+                />
+                <Link
+                  to="/podcasts"
+                  style={{ color: isActive("/podcasts") ? "#FFFFFF" : "#949EA2" }}
+                  className="hover:text-white transition"
+                >
+                  Podcasts
+                </Link>
+              </li>
+              <li className="flex items-center space-x-4">
+                <img
                   src={isActive("/profile") ? user : userInativo}
                   alt="perfil"
                   className="w-6"

@@ -22,11 +22,19 @@ interface Album {
   artists: { name: string }[];
 }
 
+interface Podcast {
+  id: string;
+  name: string;
+  images?: { url: string }[];
+  publisher: string;
+}
+
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [artists, setArtists] = useState<Artist[]>([]);
   const [tracks, setTracks] = useState<Track[]>([]);
   const [albums, setAlbums] = useState<Album[]>([]);
+  const [podcasts, setPodcasts] = useState<Podcast[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -46,7 +54,7 @@ const Home = () => {
         },
         params: {
           q: searchTerm,
-          type: "artist,track,playlist,album",
+          type: "artist,track,playlist,album,show",  // Adicionando podcasts (show)
           limit: 10,
         },
       });
@@ -56,6 +64,7 @@ const Home = () => {
       setArtists(response.data.artists?.items || []);
       setTracks(response.data.tracks?.items || []);
       setAlbums(response.data.albums?.items || []);
+      setPodcasts(response.data.shows?.items || []);  // Definindo os podcasts
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         setError("Sessão expirada. Faça login novamente.");
@@ -92,7 +101,7 @@ const Home = () => {
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Buscar artistas, músicas, playlists ou álbuns..."
+          placeholder="Buscar artistas, músicas, playlists, álbuns ou podcasts..."
           className="w-full p-3 rounded-lg text-white bg-[#121212] focus:outline-none mb-8"
         />
 
@@ -122,6 +131,7 @@ const Home = () => {
                 </div>
               </div>
             )}
+
             {tracks.length > 0 && (
               <div>
                 <h2 className="text-2xl font-semibold mb-3">Músicas</h2>
@@ -147,6 +157,7 @@ const Home = () => {
                 </div>
               </div>
             )}
+
             {albums.length > 0 && (
               <div>
                 <h2 className="text-2xl font-semibold mb-3">Álbuns</h2>
@@ -167,9 +178,33 @@ const Home = () => {
                   ))}
                 </div>
               </div>
-          )}
-        </div>
-      )}
+            )}
+
+            {podcasts.length > 0 && (
+              <div>
+                <h2 className="text-2xl font-semibold mb-3">Podcasts</h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {podcasts.map((podcast) => (
+                    <div
+                      key={podcast.id}
+                      className="cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg"
+                    >
+                      <img
+                        src={getImageUrl(podcast.images)}
+                        alt={podcast.name}
+                        className="w-full h-32 object-cover rounded-lg mb-2"
+                      />
+                      <p>{podcast.name}</p>
+                      <p className="text-sm text-gray-400">
+                        {podcast.publisher}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
