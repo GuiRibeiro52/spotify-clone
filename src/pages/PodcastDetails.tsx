@@ -123,24 +123,28 @@ const PodcastDetails = () => {
           </thead>
           <tbody>
             {podcast?.episodes.items.map((episode, index) => (
-              <tr
-                key={episode.id}
-                className="hover:bg-[#1A1A1A] transition duration-300 cursor-pointer"
-              >
-                <td className="py-2 px-4">{index + 1}</td>
-                <td className="py-2 px-4">
-                  <p className="text-sm">{episode.name}</p>
-                  <span className="text-xs opacity-80">{episode.description.slice(0, 50)}...</span>
-                </td>
-                <td className="py-2 px-4 text-sm">
-                  {formatDuration(episode.duration_ms)}
-                </td>
-                <td className="py-2 px-4 text-sm">
-                  {new Date(episode.release_date).toLocaleDateString("pt-BR")}
-                </td>
-              </tr>
+                episode && episode.name ? (
+                <tr
+                    key={episode.id}
+                    className="hover:bg-[#1A1A1A] transition duration-300 cursor-pointer"
+                >
+                    <td className="py-2 px-4">{index + 1}</td>
+                    <td className="py-2 px-4">
+                    <p className="text-sm">{episode.name}</p>
+                    <span className="text-xs opacity-80">
+                        {episode.description ? `${episode.description.slice(0, 50)}...` : "Descrição indisponível"}
+                    </span>
+                    </td>
+                    <td className="py-2 px-4 text-sm">
+                    {episode.duration_ms ? formatDuration(episode.duration_ms) : "N/A"}
+                    </td>
+                    <td className="py-2 px-4 text-sm">
+                    {episode.release_date ? new Date(episode.release_date).toLocaleDateString("pt-BR") : "Data indisponível"}
+                    </td>
+                </tr>
+                ) : null
             ))}
-          </tbody>
+            </tbody>
         </table>
       </div>
     </div>
