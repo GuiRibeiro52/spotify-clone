@@ -175,8 +175,8 @@ const PlaylistDetails = () => {
                 <td className="py-2 px-4">
                   {index + 1 + (currentPage - 1) * tracksPerPage}
                 </td>
-                <td className="py-2 px-4"><p>{track.name}</p><span className="text-sm text-[#B3B3B3]">{track.artists.map((artist) => artist.name).join(", ")}</span></td>
-                <td className="py-2 px-4 hidden sm:contents">
+                <td className="py-2 px-4"><p className="text-sm">{track.name}</p><span className="text-xs opacity-80">{track.artists.map((artist) => artist.name).join(", ")}</span></td>
+                <td className="py-2 px-4 hidden sm:contents text-sm">
                   {formatDuration(track.duration_ms)}
                 </td>
               </tr>

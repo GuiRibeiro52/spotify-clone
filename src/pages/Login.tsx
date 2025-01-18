@@ -13,6 +13,8 @@ const SCOPES = [
   "playlist-modify-public",
   "playlist-modify-private",
   "user-top-read",
+  "user-read-playback-position",
+  "user-library-read",
 ];
 
 const LOGIN_URL = `https://accounts.spotify.com/authorize?response_type=code&client_id=${CLIENT_ID}&scope=${encodeURIComponent(

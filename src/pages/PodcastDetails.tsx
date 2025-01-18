@@ -117,8 +117,8 @@ const PodcastDetails = () => {
             <tr className="border-b border-[#333]">
               <th className="py-2 px-4">#</th>
               <th className="py-2 px-4">Título</th>
-              <th className="py-2 px-4 hidden sm:contents">Duração</th>
-              <th className="py-2 px-4 hidden sm:contents">Data de Lançamento</th>
+              <th className="py-2 px-4">Duração</th>
+              <th className="py-2 px-4">Data de Lançamento</th>
             </tr>
           </thead>
           <tbody>
@@ -129,13 +129,13 @@ const PodcastDetails = () => {
               >
                 <td className="py-2 px-4">{index + 1}</td>
                 <td className="py-2 px-4">
-                  <p>{episode.name}</p>
-                  <span className="text-sm text-[#B3B3B3]">{episode.description.slice(0, 50)}...</span>
+                  <p className="text-sm">{episode.name}</p>
+                  <span className="text-xs opacity-80">{episode.description.slice(0, 50)}...</span>
                 </td>
-                <td className="py-2 px-4 hidden sm:contents">
+                <td className="py-2 px-4 text-sm">
                   {formatDuration(episode.duration_ms)}
                 </td>
-                <td className="py-2 px-4 hidden sm:contents">
+                <td className="py-2 px-4 text-sm">
                   {new Date(episode.release_date).toLocaleDateString("pt-BR")}
                 </td>
               </tr>

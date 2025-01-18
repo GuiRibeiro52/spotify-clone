@@ -108,7 +108,7 @@ const Albums = () => {
               />
               <div>
                 <h3 className="text-lg font-semibold">{album.name}</h3>
-                <p className="text-sm text-[#B3B3B3]">{album.release_date}</p>
+                <p className="text-xs opacity-80">{album.release_date}</p>
               </div>
             </div>
           ))}

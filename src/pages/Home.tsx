@@ -54,8 +54,7 @@ const Home = () => {
         },
         params: {
           q: searchTerm,
-          type: "artist,track,playlist,album,show",  // Adicionando podcasts (show)
-          limit: 10,
+          type: "artist,track,playlist,album,show",
         },
       });
 
@@ -64,7 +63,7 @@ const Home = () => {
       setArtists(response.data.artists?.items || []);
       setTracks(response.data.tracks?.items || []);
       setAlbums(response.data.albums?.items || []);
-      setPodcasts(response.data.shows?.items || []);  // Definindo os podcasts
+      setPodcasts(response.data.shows?.items || []);
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         setError("Sessão expirada. Faça login novamente.");
@@ -125,7 +124,7 @@ const Home = () => {
                         alt={artist.name}
                         className="w-full h-32 object-cover rounded-lg mb-2"
                       />
-                      <p>{artist.name}</p>
+                      <p className="text-sm">{artist.name}</p>
                     </div>
                   ))}
                 </div>
@@ -147,8 +146,8 @@ const Home = () => {
                         className="w-16 h-16 object-cover rounded-lg"
                       />
                       <div>
-                        <p>{track.name}</p>
-                        <p className="text-sm text-gray-400">
+                        <p className="text-sm">{track.name}</p>
+                        <p className="text-xs opacity-80">
                           {track.artists.map((artist) => artist.name).join(", ")}
                         </p>
                       </div>
@@ -173,7 +172,7 @@ const Home = () => {
                         alt={album.name}
                         className="w-full h-32 object-cover rounded-lg mb-2"
                       />
-                      <p>{album.name}</p>
+                      <p className="text-sm">{album.name}</p>
                     </div>
                   ))}
                 </div>
@@ -195,8 +194,8 @@ const Home = () => {
                         alt={podcast.name}
                         className="w-full h-32 object-cover rounded-lg mb-2"
                       />
-                      <p>{podcast.name}</p>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm">{podcast.name}</p>
+                      <p className="text-xs opacity-80">
                         {podcast.publisher}
                       </p>
                     </div>

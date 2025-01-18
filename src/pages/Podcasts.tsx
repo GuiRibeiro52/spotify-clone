@@ -46,7 +46,6 @@ const Podcasts = () => {
         params: {
           q: "podcast",
           type: "show",
-          limit: 10,
         },
       });
 
@@ -79,12 +78,12 @@ const Podcasts = () => {
 
         {recentPodcasts.length > 0 && (
           <div className="mb-12">
-            <h2 className="text-2xl font-semibold mb-3">🎧 Recentes</h2>
+            <h2 className="text-2xl font-semibold mb-3">🎧 Ouvido Recentemente</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {recentPodcasts.map((podcast) => (
                 <div
                   key={podcast.id}
-                  onClick={() => navigate(`/podcast/${podcast.id}`)}
+                  onClick={() => navigate(`/podcasts/${podcast.id}`)}
                   className="cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg"
                 >
                   <img
@@ -92,8 +91,8 @@ const Podcasts = () => {
                     alt={podcast.name}
                     className="w-full h-32 object-cover rounded-lg mb-2"
                   />
-                  <p className="font-semibold">{podcast.name}</p>
-                  <p className="text-sm text-gray-400">{podcast.publisher}</p>
+                  <p className="text-sm font-semibold">{podcast.name}</p>
+                  <p className="text-xs opacity-80">{podcast.publisher}</p>
                 </div>
               ))}
             </div>
@@ -115,8 +114,8 @@ const Podcasts = () => {
                     alt={podcast.name}
                     className="w-full h-32 object-cover rounded-lg mb-2"
                   />
-                  <p className="font-semibold">{podcast.name}</p>
-                  <p className="text-sm text-gray-400">{podcast.publisher}</p>
+                  <p className="font-semibold text-sm">{podcast.name}</p>
+                  <p className="opacity-80 text-xs">{podcast.publisher}</p>
                 </div>
               ))}
             </div>
