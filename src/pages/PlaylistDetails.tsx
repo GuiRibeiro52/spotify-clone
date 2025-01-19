@@ -26,16 +26,16 @@ const PlaylistDetails = () => {
   const [playlist, setPlaylist] = useState<Playlist | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [tracks, setTracks] = useState<Track[]>([]);
+  const [tracks, setTracks] = useState<Track[] | null>(null);
   const [isPlaylistInLibrary, setIsPlaylistInLibrary] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const tracksPerPage = 50;
 
   useEffect(() => {
-    const token = localStorage.getItem("spotify_access_token");
-
     const fetchPlaylistDetails = async () => {
+      const token = localStorage.getItem("spotify_access_token");
+
       if (!token || !playlistId) {
         console.error("Token ou ID da playlist não encontrado.");
         return;
@@ -50,7 +50,7 @@ const PlaylistDetails = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
 
         setPlaylist(response.data);
@@ -74,17 +74,17 @@ const PlaylistDetails = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
 
         const fetchedTracks = response.data.items.map(
-          (item: { track: Track }) => item.track
+          (item: { track: Track }) => item.track,
         );
 
         allTracks = [...allTracks, ...fetchedTracks];
       }
 
-      setTracks(allTracks);
+      setTracks(allTracks.length > 0 ? allTracks : null);
     };
 
     const checkIfPlaylistInLibrary = async (token: string) => {
@@ -122,7 +122,6 @@ const PlaylistDetails = () => {
 
     try {
       if (isPlaylistInLibrary) {
-        // Remove from library
         await axios.delete(
           `https://api.spotify.com/v1/playlists/${playlistId}/followers`,
           {
@@ -133,7 +132,6 @@ const PlaylistDetails = () => {
         );
         setIsPlaylistInLibrary(false);
       } else {
-        // Add to library
         await axios.put(
           `https://api.spotify.com/v1/playlists/${playlistId}/followers`,
           {},
@@ -157,7 +155,9 @@ const PlaylistDetails = () => {
 
   const indexOfLastTrack = currentPage * tracksPerPage;
   const indexOfFirstTrack = indexOfLastTrack - tracksPerPage;
-  const currentTracks = tracks.slice(indexOfFirstTrack, indexOfLastTrack);
+  const currentTracks = tracks ? tracks.slice(indexOfFirstTrack, indexOfLastTrack) : [];
+
+  const playlistImage = playlist?.images?.[0]?.url || "https://via.placeholder.com/200";
 
   if (loading) {
     return (
@@ -180,7 +180,7 @@ const PlaylistDetails = () => {
       <div
         className="p-8"
         style={{
-          background: `linear-gradient(to bottom, rgba(0,0,0,0.8), #121212), url(${playlist.images[0]?.url}) no-repeat center/cover`,
+          background: `linear-gradient(to bottom, rgba(0,0,0,0.8), #121212), url(${playlistImage}) no-repeat center/cover`,
           borderBottom: "1px solid #333",
         }}
       >
@@ -194,7 +194,7 @@ const PlaylistDetails = () => {
 
         <div className="flex flex-col sm:flex-row items-center gap-6">
           <img
-            src={playlist.images[0]?.url || "https://via.placeholder.com/200"}
+            src={playlistImage}
             alt={playlist.name}
             className="w-52 h-52 shadow-lg rounded-lg"
           />
@@ -225,56 +225,62 @@ const PlaylistDetails = () => {
       </div>
 
       <div className="p-8">
-        <table className="w-full text-left">
-          <thead>
-            <tr className="border-b border-[#333]">
-              <th className="py-2 px-4">#</th>
-              <th className="py-2 px-4">Título</th>
-              <th className="py-2 px-4 hidden sm:contents">Duração</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentTracks.map((track, index) => (
-              <tr
-                key={track.id}
-                className="hover:bg-[#1A1A1A] transition duration-300 cursor-pointer"
-              >
-                <td className="py-2 px-4">
-                  {index + 1 + (currentPage - 1) * tracksPerPage}
-                </td>
-                <td className="py-2 px-4">
-                  <p className="text-sm">{track.name}</p>
-                  <span className="text-xs opacity-80">
-                    {track.artists.map((artist) => artist.name).join(", ")}
-                  </span>
-                </td>
-                <td className="py-2 px-4 hidden sm:contents text-sm">
-                  {formatDuration(track.duration_ms)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {tracks === null ? (
+          <p className="text-center text-[#B3B3B3] mt-4">Nenhuma música encontrada na playlist.</p>
+        ) : (
+          <>
+            <table className="w-full text-left">
+              <thead>
+                <tr className="border-b border-[#333]">
+                  <th className="py-2 px-4">#</th>
+                  <th className="py-2 px-4">Título</th>
+                  <th className="py-2 px-4 hidden sm:contents">Duração</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentTracks.map((track, index) => (
+                  <tr
+                    key={track.id}
+                    className="hover:bg-[#1A1A1A] transition duration-300 cursor-pointer"
+                  >
+                    <td className="py-2 px-4">
+                      {index + 1 + (currentPage - 1) * tracksPerPage}
+                    </td>
+                    <td className="py-2 px-4">
+                      <p className="text-sm">{track.name}</p>
+                      <span className="text-xs opacity-80">
+                        {track.artists.map((artist) => artist.name).join(", ")}
+                      </span>
+                    </td>
+                    <td className="py-2 px-4 hidden sm:contents text-sm">
+                      {formatDuration(track.duration_ms)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
-        {tracks.length > tracksPerPage && (
-          <div className="flex justify-center mt-10 gap-3">
-            {Array.from(
-              { length: Math.ceil(tracks.length / tracksPerPage) },
-              (_, i) => (
-                <button
-                  key={i + 1}
-                  onClick={() => handlePageChange(i + 1)}
-                  className={`px-4 py-2 rounded-md ${
-                    currentPage === i + 1
-                      ? "bg-primary text-black font-bold"
-                      : "bg-[#1A1A1A] text-white font-bold hover:bg-[#333]"
-                  }`}
-                >
-                  {i + 1}
-                </button>
-              )
+            {tracks.length > tracksPerPage && (
+              <div className="flex justify-center mt-10 gap-3">
+                {Array.from(
+                  { length: Math.ceil(tracks.length / tracksPerPage) },
+                  (_, i) => (
+                    <button
+                      key={i + 1}
+                      onClick={() => handlePageChange(i + 1)}
+                      className={`px-4 py-2 rounded-md ${
+                        currentPage === i + 1
+                          ? "bg-primary text-black font-bold"
+                          : "bg-[#1A1A1A] text-white font-bold hover:bg-[#333]"
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ),
+                )}
+              </div>
             )}
-          </div>
+          </>
         )}
       </div>
     </div>
