@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import arrow from "../assets/images/arrow-left.png";
+import plus from "../assets/images/plus-circle.png";
+import check from "../assets/images/check-circle-fill.png";
 
 interface Track {
   id: string;
@@ -25,14 +27,15 @@ const PlaylistDetails = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [tracks, setTracks] = useState<Track[]>([]);
+  const [isPlaylistInLibrary, setIsPlaylistInLibrary] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const tracksPerPage = 50;
 
   useEffect(() => {
-    const fetchPlaylistDetails = async () => {
-      const token = localStorage.getItem("spotify_access_token");
+    const token = localStorage.getItem("spotify_access_token");
 
+    const fetchPlaylistDetails = async () => {
       if (!token || !playlistId) {
         console.error("Token ou ID da playlist não encontrado.");
         return;
@@ -47,11 +50,12 @@ const PlaylistDetails = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          },
+          }
         );
 
         setPlaylist(response.data);
         await fetchAllTracks(response.data.tracks.total, token);
+        await checkIfPlaylistInLibrary(token);
       } catch (error) {
         console.error("Erro ao buscar detalhes da playlist:", error);
       } finally {
@@ -70,17 +74,37 @@ const PlaylistDetails = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          },
+          }
         );
 
         const fetchedTracks = response.data.items.map(
-          (item: { track: Track }) => item.track,
+          (item: { track: Track }) => item.track
         );
 
         allTracks = [...allTracks, ...fetchedTracks];
       }
 
       setTracks(allTracks);
+    };
+
+    const checkIfPlaylistInLibrary = async (token: string) => {
+      try {
+        const response = await axios.get(
+          `https://api.spotify.com/v1/me/playlists`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const isSaved = response.data.items.some(
+          (item: Playlist) => item.id === playlistId
+        );
+        setIsPlaylistInLibrary(isSaved);
+      } catch (error) {
+        console.error("Erro ao verificar se a playlist está na biblioteca:", error);
+      }
     };
 
     fetchPlaylistDetails();
@@ -90,6 +114,40 @@ const PlaylistDetails = () => {
     const minutes = Math.floor(ms / 60000);
     const seconds = ((ms % 60000) / 1000).toFixed(0);
     return `${minutes}:${parseInt(seconds) < 10 ? "0" : ""}${seconds}`;
+  };
+
+  const handleToggleLibrary = async () => {
+    const token = localStorage.getItem("spotify_access_token");
+    if (!token || !playlistId) return;
+
+    try {
+      if (isPlaylistInLibrary) {
+        // Remove from library
+        await axios.delete(
+          `https://api.spotify.com/v1/playlists/${playlistId}/followers`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setIsPlaylistInLibrary(false);
+      } else {
+        // Add to library
+        await axios.put(
+          `https://api.spotify.com/v1/playlists/${playlistId}/followers`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setIsPlaylistInLibrary(true);
+      }
+    } catch (error) {
+      console.error("Erro ao adicionar/remover a playlist da biblioteca:", error);
+    }
   };
 
   const handlePageChange = (pageNumber: number) => {
@@ -152,9 +210,18 @@ const PlaylistDetails = () => {
           </div>
         </div>
 
-        <button className="mt-6 bg-primary text-black font-bold px-8 py-3 rounded-full hover:bg-[#1ed760] transition duration-300">
-          Play
-        </button>
+        <div className="flex items-center gap-4 mt-6">
+          <button className="bg-primary text-black font-bold px-8 py-3 rounded-full hover:bg-[#1ed760] transition duration-300">
+            Play
+          </button>
+          <button onClick={handleToggleLibrary} className="p-2">
+            <img
+              src={isPlaylistInLibrary ? check : plus}
+              alt="Library Action"
+              className="w-8 h-8"
+            />
+          </button>
+        </div>
       </div>
 
       <div className="p-8">
@@ -175,7 +242,12 @@ const PlaylistDetails = () => {
                 <td className="py-2 px-4">
                   {index + 1 + (currentPage - 1) * tracksPerPage}
                 </td>
-                <td className="py-2 px-4"><p className="text-sm">{track.name}</p><span className="text-xs opacity-80">{track.artists.map((artist) => artist.name).join(", ")}</span></td>
+                <td className="py-2 px-4">
+                  <p className="text-sm">{track.name}</p>
+                  <span className="text-xs opacity-80">
+                    {track.artists.map((artist) => artist.name).join(", ")}
+                  </span>
+                </td>
                 <td className="py-2 px-4 hidden sm:contents text-sm">
                   {formatDuration(track.duration_ms)}
                 </td>
@@ -200,7 +272,7 @@ const PlaylistDetails = () => {
                 >
                   {i + 1}
                 </button>
-              ),
+              )
             )}
           </div>
         )}

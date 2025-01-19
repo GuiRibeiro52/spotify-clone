@@ -11,6 +11,8 @@ import discInativo from "../assets/images/disc-inativo.png";
 import user from "../assets/images/user.png";
 import userInativo from "../assets/images/user-inativo.png";
 import down from "../assets/images/arrow-down.png";
+import microphone from  "../assets/images/microphone.png";
+import microphoneInativo from  "../assets/images/microphone-inativo.png";
 
 
 const Sidebar = () => {
@@ -83,7 +85,7 @@ const Sidebar = () => {
               </li>
               <li className="flex items-center space-x-4">
                 <img
-                  src={isPodcastsActive() ? home : homeInativo}
+                  src={isPodcastsActive() ? microphone : microphoneInativo}
                   alt="podcast"
                   className="w-6"
                 />
