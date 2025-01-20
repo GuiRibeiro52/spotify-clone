@@ -97,12 +97,12 @@ const Podcasts = () => {
         {recentPodcasts.length > 0 && (
           <div className="mb-10">
             <h2 className="text-2xl font-semibold mb-3">🎧 Ouvido Recentemente</h2>
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
               {recentPodcasts.map((podcast) => (
                 <div
                   key={podcast.id}
                   onClick={() => navigate(`/podcasts/${podcast.id}`)}
-                  className="cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg h-full w-full sm:w-56"
+                  className="flex flex-col items-center justify-center text-center space-y-4 cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg h-full w-full sm:w-56"
                 >
                   <img
                     src={getImageUrl(podcast.images)}
@@ -120,12 +120,12 @@ const Podcasts = () => {
         {trendingPodcasts.length > 0 && (
           <div>
             <h2 className="text-2xl font-semibold mb-3">🔥 Em Alta</h2>
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
               {trendingPodcasts.map((podcast) => (
                 <div
                   key={podcast.id}
                   onClick={() => navigate(`/podcasts/${podcast.id}`)}
-                  className="cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg h-full max-w-56"
+                  className="flex flex-col items-center justify-center text-center space-y-4 cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg h-full w-full sm:w-56"
                 >
                   <img
                     src={getImageUrl(podcast.images)}

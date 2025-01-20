@@ -22,10 +22,16 @@ interface Album {
   artists: { name: string }[];
 }
 
+interface Image {
+  url: string;
+  width?: number;
+  height?: number;
+}
+
 interface Podcast {
   id: string;
   name: string;
-  images?: { url: string }[];
+  images?: Image[];
   publisher: string;
 }
 
@@ -90,8 +96,13 @@ const Home = () => {
     }
   }, [searchTerm, handleSearch]);
 
-  const getImageUrl = (images?: { url: string }[]) => {
-    return images && images.length > 0 ? images[0].url : "https://via.placeholder.com/150";
+  const getImageUrl = (images?: Image[]) => {
+    if (!images || images.length === 0) {
+      return "https://via.placeholder.com/216";
+    }    
+    const highResImage = images.find((image) => image.width === 640);
+  
+    return highResImage ? highResImage.url : images[1].url;
   };
 
   return (
@@ -114,17 +125,17 @@ const Home = () => {
             {artists.length > 0 && (
               <div>
                 <h2 className="text-2xl font-semibold mb-3">Artistas</h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
                   {artists.map((artist) => (
                     <div
                       key={artist.id}
                       onClick={() => navigate(`/artistas/${artist.id}`)}
-                      className="cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg"
+                      className="flex flex-col items-center justify-center text-center space-y-4 cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg h-full w-full sm:w-56"
                     >
                       <img
                         src={getImageUrl(artist.images)}
                         alt={artist.name}
-                        className="w-full h-32 object-cover rounded-lg mb-2"
+                        className="object-cover rounded-lg"
                       />
                       <p className="text-sm">{artist.name}</p>
                     </div>
@@ -136,16 +147,16 @@ const Home = () => {
             {tracks.length > 0 && (
               <div>
                 <h2 className="text-2xl font-semibold mb-3">Músicas</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
                   {tracks.map((track) => (
                     <div
                       key={track.id}
-                      className="flex items-center gap-4 hover:bg-[#1A1A1A] p-3 rounded-lg"
+                      className="flex flex-col items-center justify-center text-center space-y-4 cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg h-full w-full sm:w-56"
                     >
                       <img
                         src={getImageUrl(track.album?.images)}
                         alt={track.name}
-                        className="w-16 h-16 object-cover rounded-lg"
+                        className="object-cover rounded-lg"
                       />
                       <div>
                         <p className="text-sm">{track.name}</p>
@@ -167,7 +178,7 @@ const Home = () => {
                     <div
                       key={album.id}
                       onClick={() => navigate(`/album/${album.id}`)}
-                      className="cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg"
+                      className="flex flex-col items-center justify-center text-center space-y-4 cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg h-full w-full"
                     >
                       <img
                         src={getImageUrl(album.images)}
@@ -184,17 +195,17 @@ const Home = () => {
             {podcasts.length > 0 && (
               <div>
                 <h2 className="text-2xl font-semibold mb-3">Podcasts</h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
                   {podcasts.map((podcast) => (
                     <div
                       key={podcast.id}
                       onClick={() => navigate(`/podcasts/${podcast.id}`)}
-                      className="cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg"
+                      className="flex flex-col items-center justify-center text-center space-y-4 cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg h-full w-full sm:w-56"
                     >
                       <img
                         src={getImageUrl(podcast.images)}
                         alt={podcast.name}
-                        className="w-full h-32 object-cover rounded-lg mb-2"
+                        className="object-cover rounded-lg"
                       />
                       <p className="text-sm">{podcast.name}</p>
                       <p className="text-xs opacity-80">
