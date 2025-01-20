@@ -34,6 +34,8 @@ const PlaylistDetails = () => {
 
   const tracksPerPage = 50;
   const userId = localStorage.getItem("spotify_user_id");
+  console.log("Playlist Owner:", playlist?.owner.id, "User ID:", userId);
+
 
   useEffect(() => {
     const fetchPlaylistDetails = async () => {
@@ -162,6 +164,8 @@ const PlaylistDetails = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+
+      navigate("/playlists"); //Preciso verificar isso ainda, esse retorno é provisório
 
       if (playlist?.owner.id === userId) {
         navigate("/playlists");
