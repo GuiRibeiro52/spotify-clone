@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import arrow from "../assets/images/arrow-left.png";
 import plus from "../assets/images/plus-circle.png";
-import check from "../assets/images/check-circle-fill.png";
+import trash from "../assets/images/trash.png";
 
 interface Track {
   id: string;
@@ -19,6 +19,7 @@ interface Playlist {
   images: { url: string }[];
   tracks: { total: number };
   description: string;
+  owner: { id: string, display_name: string; };
 }
 
 const PlaylistDetails = () => {
@@ -28,9 +29,11 @@ const PlaylistDetails = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [tracks, setTracks] = useState<Track[] | null>(null);
   const [isPlaylistInLibrary, setIsPlaylistInLibrary] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const tracksPerPage = 50;
+  const userId = localStorage.getItem("spotify_user_id");
 
   useEffect(() => {
     const fetchPlaylistDetails = async () => {
@@ -148,6 +151,30 @@ const PlaylistDetails = () => {
     }
   };
 
+  const handleDeletePlaylist = async () => {
+    const token = localStorage.getItem("spotify_access_token");
+    if (!token || !playlistId) return;
+
+    try {
+      await axios.delete(
+        `https://api.spotify.com/v1/playlists/${playlistId}/followers`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (playlist?.owner.id === userId) {
+        navigate("/playlists");
+      } else {
+        setIsPlaylistInLibrary(false);
+      }
+    } catch (error) {
+      console.error("Erro ao remover a playlist:", error);
+    } finally {
+      setShowModal(false);
+    }
+  };
+
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -176,7 +203,7 @@ const PlaylistDetails = () => {
   }
 
   return (
-    <div className="bg-[#121212] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik">
+    <div className="bg-[#121212] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik">      
       <div
         className="p-8"
         style={{
@@ -205,6 +232,9 @@ const PlaylistDetails = () => {
               {playlist.name}
             </h1>
             <p className="mt-2 text-sm text-[#B3B3B3]">
+              AUTOR: {playlist.owner.display_name}
+            </p>
+            <p className="mt-2 text-sm text-[#B3B3B3]">
               {playlist.tracks.total} músicas
             </p>
           </div>
@@ -214,12 +244,21 @@ const PlaylistDetails = () => {
           <button className="bg-primary text-black font-bold px-8 py-3 rounded-full hover:bg-[#1ed760] transition duration-300">
             Play
           </button>
-          <button onClick={handleToggleLibrary} className="p-2">
+          <button
+            onClick={() => {
+              if (isPlaylistInLibrary) {
+                setShowModal(true);
+              } else {
+                handleToggleLibrary();
+              }
+            }}
+            className="px-8 py-3 space-x-3 flex items-center border border-[#333] rounded-full hover:bg-[#333] transition duration-300"
+          >
             <img
-              src={isPlaylistInLibrary ? check : plus}
+              src={isPlaylistInLibrary ? trash : plus}
               alt="Library Action"
               className="w-8 h-8"
-            />
+            />{isPlaylistInLibrary ? <p className="text-bold text-sm opacity-80">Remover Playlist</p> : <p className="text-bold text-sm opacity-80">Adicionar à biblioteca</p>}
           </button>
         </div>
       </div>
@@ -283,6 +322,27 @@ const PlaylistDetails = () => {
           </>
         )}
       </div>
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center">
+          <div className="bg-[#303030] p-6 rounded-[32px] text-center space-y-10">
+            <p className="text-white font-bold mb-4">Tem certeza que deseja excluir esta playlist?</p>
+            <div className="flex justify-center space-x-4 font-bold">
+              <button
+                onClick={handleDeletePlaylist}
+                className="bg-primary text-black px-4 py-2 rounded-lg hover:bg-[#1ed760]"
+              >
+                Sim
+              </button>
+              <button
+                onClick={() => setShowModal(false)}
+                className="bg-[#121212] text-white px-4 py-2 rounded-lg hover:bg-black"
+              >
+                Não
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
