@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -41,7 +41,7 @@ const Home = () => {
   const token = localStorage.getItem("spotify_access_token");
   const navigate = useNavigate();
 
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async () => {
     if (!searchTerm || !token) return;
 
     setLoading(true);
@@ -64,19 +64,21 @@ const Home = () => {
       setTracks(response.data.tracks?.items || []);
       setAlbums(response.data.albums?.items || []);
       setPodcasts(response.data.shows?.items || []);
-    } catch (error: any) {
-      if (error.response && error.response.status === 401) {
-        setError("Sessão expirada. Faça login novamente.");
-        localStorage.removeItem("spotify_access_token");
-        navigate("/login");
-      } else {
-        setError("Erro ao buscar dados. Tente novamente.");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        if (error.message.includes("401")) {
+          setError("Sessão expirada. Faça login novamente.");
+          localStorage.removeItem("spotify_access_token");
+          navigate("/login");
+        } else {
+          setError("Erro ao buscar dados. Tente novamente.");
+        }
+        console.error("Erro detalhado:", error);
       }
-      console.error("Erro detalhado:", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchTerm, token, navigate]);
 
   useEffect(() => {
     if (searchTerm.length > 2) {
@@ -86,7 +88,7 @@ const Home = () => {
 
       return () => clearTimeout(delayDebounceFn);
     }
-  }, [searchTerm]);
+  }, [searchTerm, handleSearch]);
 
   const getImageUrl = (images?: { url: string }[]) => {
     return images && images.length > 0 ? images[0].url : "https://via.placeholder.com/150";
