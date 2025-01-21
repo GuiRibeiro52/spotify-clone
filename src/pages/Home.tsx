@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Slider from "react-slick";
 
 interface Artist {
   id: string;
@@ -8,214 +9,125 @@ interface Artist {
   images?: { url: string }[];
 }
 
-interface Track {
+interface Playlist {
   id: string;
   name: string;
-  artists: { name: string }[];
-  album?: { images?: { url: string }[] };
-}
-
-interface Album {
-  id: string;
-  name: string;
-  images?: { url: string }[];
-  artists: { name: string }[];
-}
-
-interface Image {
-  url: string;
-  width?: number;
-  height?: number;
-}
-
-interface Podcast {
-  id: string;
-  name: string;
-  images?: Image[];
-  publisher: string;
+  images: { url: string }[];
+  tracks: { total: number };
+  description: string;
+  owner: { id: string; display_name: string };
 }
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [artists, setArtists] = useState<Artist[]>([]);
-  const [tracks, setTracks] = useState<Track[]>([]);
-  const [albums, setAlbums] = useState<Album[]>([]);
-  const [podcasts, setPodcasts] = useState<Podcast[]>([]);
+  const [topPlaylists, setTopPlaylists] = useState<Playlist[]>([]);
+  const [favoriteArtists, setFavoriteArtists] = useState<Artist[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const token = localStorage.getItem("spotify_access_token");
   const navigate = useNavigate();
+  const token = localStorage.getItem("spotify_access_token");
 
-  const handleSearch = useCallback(async () => {
-    if (!searchTerm || !token) return;
+  const sliderSettings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 5,
+    slidesToScroll: 3,
+    responsive: [
+      { breakpoint: 1024, settings: { slidesToShow: 3 } },
+      { breakpoint: 768, settings: { slidesToShow: 2 } },
+      { breakpoint: 480, settings: { slidesToShow: 1 } },
+    ],
+  };
 
-    setLoading(true);
-    setError(null);
-
+  const fetchData = useCallback(async () => {
+    if (!token) return;
     try {
-      const response = await axios.get("https://api.spotify.com/v1/search", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          q: searchTerm,
-          type: "artist,track,playlist,album,show",
-        },
-      });
+      setLoading(true);
+      const topPlaylistsResponse = await axios.get(
+        "https://api.spotify.com/v1/browse/featured-playlists",
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      const favoriteArtistsResponse = await axios.get(
+        "https://api.spotify.com/v1/me/top/artists",
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-      console.log("Resposta da API:", response.data);
-
-      setArtists(response.data.artists?.items || []);
-      setTracks(response.data.tracks?.items || []);
-      setAlbums(response.data.albums?.items || []);
-      setPodcasts(response.data.shows?.items || []);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        if (error.message.includes("401")) {
-          setError("Sessão expirada. Faça login novamente.");
-          localStorage.removeItem("spotify_access_token");
-          navigate("/login");
-        } else {
-          setError("Erro ao buscar dados. Tente novamente.");
-        }
-        console.error("Erro detalhado:", error);
-      }
+      setTopPlaylists(topPlaylistsResponse.data.playlists.items || []);
+      setFavoriteArtists(favoriteArtistsResponse.data.items || []);
+    } catch (err) {
+      console.error("Erro ao buscar dados:", err);
+      setError("Erro ao carregar os dados. Por favor, tente novamente.");
     } finally {
       setLoading(false);
     }
-  }, [searchTerm, token, navigate]);
+  }, [token]);
 
   useEffect(() => {
-    if (searchTerm.length > 2) {
-      const delayDebounceFn = setTimeout(() => {
-        handleSearch();
-      }, 500);
+    fetchData();
+  }, [fetchData]);
 
-      return () => clearTimeout(delayDebounceFn);
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/search-results?query=${searchTerm}`);
     }
-  }, [searchTerm, handleSearch]);
-
-  const getImageUrl = (images?: Image[]) => {
-    if (!images || images.length === 0) {
-      return "https://via.placeholder.com/216";
-    }    
-    const highResImage = images.find((image) => image.width === 640);
-  
-    return highResImage ? highResImage.url : images[1].url;
   };
 
   return (
     <div className="bg-[#090707] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik">
       <div className="p-8">
         <h1 className="text-3xl font-bold mb-4">O que vamos ouvir?</h1>
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Buscar artistas, músicas, playlists, álbuns ou podcasts..."
-          className="w-full p-3 rounded-lg text-white bg-[#121212] focus:outline-none mb-8"
-        />
+        <form onSubmit={handleSearch}>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Buscar artistas, músicas, playlists, álbuns ou podcasts..."
+            className="w-full p-3 rounded-lg text-white bg-[#121212] focus:outline-none mb-8"
+          />
+        </form>
 
         {loading && <p>🔎 Buscando...</p>}
         {error && <p className="text-red-500">{error}</p>}
 
         {!loading && !error && (
           <div className="space-y-8">
-            {artists.length > 0 && (
-              <div>
-                <h2 className="text-2xl font-semibold mb-3">Artistas</h2>
-                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-                  {artists.map((artist) => (
-                    <div
-                      key={artist.id}
-                      onClick={() => navigate(`/artistas/${artist.id}`)}
-                      className="flex flex-col items-center justify-center text-center space-y-4 cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg h-full w-full sm:w-56"
-                    >
-                      <img
-                        src={getImageUrl(artist.images)}
-                        alt={artist.name}
-                        className="object-cover rounded-lg"
-                      />
-                      <p className="text-sm">{artist.name}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            <div>
+              <h2 className="text-2xl font-semibold mb-3">Playlists em alta</h2>
+              <Slider {...sliderSettings}>
+                {topPlaylists.map((playlist) => (
+                  <div key={playlist.id} className="p-2">
+                    <img
+                      src={playlist.images[0]?.url || "https://via.placeholder.com/300"}
+                      alt={playlist.name}
+                      className="rounded-lg w-full h-48 object-cover"
+                    />
+                    <p className="text-center text-sm mt-2">{playlist.name}</p>
+                  </div>
+                ))}
+              </Slider>
+            </div>
 
-            {tracks.length > 0 && (
-              <div>
-                <h2 className="text-2xl font-semibold mb-3">Músicas</h2>
-                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-                  {tracks.map((track) => (
-                    <div
-                      key={track.id}
-                      className="flex flex-col items-center justify-center text-center space-y-4 cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg h-full w-full sm:w-56"
-                    >
-                      <img
-                        src={getImageUrl(track.album?.images)}
-                        alt={track.name}
-                        className="object-cover rounded-lg"
-                      />
-                      <div>
-                        <p className="text-sm">{track.name}</p>
-                        <p className="text-xs opacity-80">
-                          {track.artists.map((artist) => artist.name).join(", ")}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {albums.length > 0 && (
-              <div>
-                <h2 className="text-2xl font-semibold mb-3">Álbuns</h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {albums.map((album) => (
-                    <div
-                      key={album.id}
-                      onClick={() => navigate(`/album/${album.id}`)}
-                      className="flex flex-col items-center justify-center text-center space-y-4 cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg h-full w-full"
-                    >
-                      <img
-                        src={getImageUrl(album.images)}
-                        alt={album.name}
-                        className="w-full h-32 object-cover rounded-lg mb-2"
-                      />
-                      <p className="text-sm">{album.name}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {podcasts.length > 0 && (
-              <div>
-                <h2 className="text-2xl font-semibold mb-3">Podcasts</h2>
-                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-                  {podcasts.map((podcast) => (
-                    <div
-                      key={podcast.id}
-                      onClick={() => navigate(`/podcasts/${podcast.id}`)}
-                      className="flex flex-col items-center justify-center text-center space-y-4 cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg h-full w-full sm:w-56"
-                    >
-                      <img
-                        src={getImageUrl(podcast.images)}
-                        alt={podcast.name}
-                        className="object-cover rounded-lg"
-                      />
-                      <p className="text-sm">{podcast.name}</p>
-                      <p className="text-xs opacity-80">
-                        {podcast.publisher}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            <div>
+              <h2 className="text-2xl font-semibold mb-3">Seus artistas favoritos</h2>
+              <Slider {...sliderSettings}>
+                {favoriteArtists.map((artist) => (
+                  <div
+                    key={artist.id}
+                    className="p-2 cursor-pointer"
+                    onClick={() => navigate(`/artistas/${artist.id}`)}
+                  >
+                    <img
+                      src={artist.images?.[0]?.url || "https://via.placeholder.com/300"}
+                      alt={artist.name}
+                      className="rounded-lg w-full h-48 object-cover"
+                    />
+                    <p className="text-center text-sm mt-2">{artist.name}</p>
+                  </div>
+                ))}
+              </Slider>
+            </div>
           </div>
         )}
       </div>

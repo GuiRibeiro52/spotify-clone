@@ -12,6 +12,7 @@ import PlaylistDetails from "./pages/PlaylistDetails.tsx";
 import AlbumDetails from "./pages/AlbumDetails.tsx";
 import Podcasts from "./pages/Podcasts.tsx";
 import PodcastDetails from "./pages/PodcastDetails.tsx";
+import SearchResults from "./pages/SearchResults.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -89,8 +90,15 @@ export const router = createBrowserRouter([
             <PodcastDetails />
           </ProtectedRoute>
         ),
-      }
-      
+      },
+      {
+        path: "/search-results",
+        element: (
+          <ProtectedRoute>
+            <SearchResults />
+          </ProtectedRoute>
+        ),
+      }      
     ],
   },
   { path: "/login", element: <Login /> },
