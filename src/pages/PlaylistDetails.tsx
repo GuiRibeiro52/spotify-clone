@@ -203,7 +203,7 @@ const PlaylistDetails = () => {
   }
 
   return (
-    <div className="bg-[#121212] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik">
+    <div className="bg-[#121212] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik pb-16">
       <div
         className="p-8"
         style={{

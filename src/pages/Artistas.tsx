@@ -54,7 +54,7 @@ const Artistas = () => {
   }, [token]);
 
   return (
-    <div className="bg-[#090707] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik">
+    <div className="bg-[#090707] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik pb-16">
       <div className="p-8">
         <h1 className="text-3xl font-bold mb-2">Top Artistas</h1>
         <p className="text-[#D3DADD] mb-6">

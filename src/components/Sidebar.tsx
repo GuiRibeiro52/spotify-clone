@@ -32,7 +32,7 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className="w-[250px] h-screen bg-black text-white fixed left-0 top-0 flex-col justify-between font-dm font-bold hidden md:flex">
+      <div className="w-[250px] h-screen bg-black text-white fixed left-0 top-0 pb-20 flex-col justify-between font-dm font-bold hidden md:flex">
         <div className="p-4">
           <div className="mt-8">
             <img src={spotify} alt="Spotify" className="w-44" />

@@ -75,7 +75,7 @@ const Albums = () => {
   };
 
   return (
-    <div className="bg-[#090707] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik">
+    <div className="bg-[#090707] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik pb-16">
       <div className="p-8">
         <div className="flex justify-between items-center mt-6">
           <button

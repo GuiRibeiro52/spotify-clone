@@ -111,7 +111,7 @@ const SearchResults = () => {
   };
 
   return (
-    <div className="bg-[#090707] min-h-screen md:pl-[250px] pt-8 text-white font-rubik">
+    <div className="bg-[#090707] min-h-screen md:pl-[250px] pt-8 text-white font-rubik pb-16">
       <div className="p-8">
         <h1 className="text-3xl font-bold mb-6">Resultados da Pesquisa: "{searchTerm}"</h1>
         <form onSubmit={handleSearch}>
