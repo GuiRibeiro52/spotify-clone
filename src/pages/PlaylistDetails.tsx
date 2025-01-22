@@ -4,6 +4,7 @@ import axios from "axios";
 import arrow from "../assets/images/arrow-left.png";
 import plus from "../assets/images/plus-circle.png";
 import trash from "../assets/images/trash.png";
+import { usePlayer } from "../context/PlayerContext";
 
 interface Track {
   id: string;
@@ -11,6 +12,7 @@ interface Track {
   artists: { name: string }[];
   duration_ms: number;
   album: { images: { url: string }[] };
+  uri: string;
 }
 
 interface Playlist {
@@ -30,17 +32,13 @@ const PlaylistDetails = () => {
   const [tracks, setTracks] = useState<Track[] | null>(null);
   const [isPlaylistInLibrary, setIsPlaylistInLibrary] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
+
+  const { setCurrentTrackUri, token } = usePlayer();
   const navigate = useNavigate();
-
   const tracksPerPage = 50;
-  const userId = localStorage.getItem("spotify_user_id");
-  console.log("Playlist Owner:", playlist?.owner.id, "User ID:", userId);
-
 
   useEffect(() => {
     const fetchPlaylistDetails = async () => {
-      const token = localStorage.getItem("spotify_access_token");
-
       if (!token || !playlistId) {
         console.error("Token ou ID da playlist não encontrado.");
         return;
@@ -113,7 +111,7 @@ const PlaylistDetails = () => {
     };
 
     fetchPlaylistDetails();
-  }, [playlistId]);
+  }, [playlistId, token]);
 
   const formatDuration = (ms: number) => {
     const minutes = Math.floor(ms / 60000);
@@ -122,7 +120,6 @@ const PlaylistDetails = () => {
   };
 
   const handleToggleLibrary = async () => {
-    const token = localStorage.getItem("spotify_access_token");
     if (!token || !playlistId) return;
 
     try {
@@ -154,7 +151,6 @@ const PlaylistDetails = () => {
   };
 
   const handleDeletePlaylist = async () => {
-    const token = localStorage.getItem("spotify_access_token");
     if (!token || !playlistId) return;
 
     try {
@@ -165,9 +161,9 @@ const PlaylistDetails = () => {
         }
       );
 
-      navigate("/playlists"); //Preciso verificar isso ainda, esse retorno é provisório
+      navigate("/playlists");
 
-      if (playlist?.owner.id === userId) {
+      if (playlist?.owner.id === playlistId) {
         navigate("/playlists");
       } else {
         setIsPlaylistInLibrary(false);
@@ -207,7 +203,7 @@ const PlaylistDetails = () => {
   }
 
   return (
-    <div className="bg-[#121212] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik">      
+    <div className="bg-[#121212] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik">
       <div
         className="p-8"
         style={{
@@ -245,7 +241,10 @@ const PlaylistDetails = () => {
         </div>
 
         <div className="flex items-center gap-4 mt-6">
-          <button className="bg-primary text-black font-bold px-8 py-3 rounded-full hover:bg-[#1ed760] transition duration-300">
+          <button
+            className="bg-primary text-black font-bold px-8 py-3 rounded-full hover:bg-[#1ed760] transition duration-300"
+            onClick={() => setCurrentTrackUri(tracks ? tracks.map((track) => track.uri) : [])}
+          >
             Play
           </button>
           <button
@@ -262,7 +261,12 @@ const PlaylistDetails = () => {
               src={isPlaylistInLibrary ? trash : plus}
               alt="Library Action"
               className="w-8 h-8"
-            />{isPlaylistInLibrary ? <p className="text-bold text-sm opacity-80">Remover Playlist</p> : <p className="text-bold text-sm opacity-80">Adicionar à biblioteca</p>}
+            />
+            {isPlaylistInLibrary ? (
+              <p className="text-bold text-sm opacity-80">Remover Playlist</p>
+            ) : (
+              <p className="text-bold text-sm opacity-80">Adicionar à biblioteca</p>
+            )}
           </button>
         </div>
       </div>
@@ -285,6 +289,7 @@ const PlaylistDetails = () => {
                   <tr
                     key={track.id}
                     className="hover:bg-[#1A1A1A] transition duration-300 cursor-pointer"
+                    onClick={() => setCurrentTrackUri([track.uri])}
                   >
                     <td className="py-2 px-4">
                       {index + 1 + (currentPage - 1) * tracksPerPage}

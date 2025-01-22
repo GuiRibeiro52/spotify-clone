@@ -1,8 +1,10 @@
 import { Outlet, Navigate } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
+import { usePlayer } from "./context/PlayerContext";
+import Player from "./components/Player";
 
 function App() {
-  const token = localStorage.getItem("spotify_access_token");
+  const { token, currentTrackUri } = usePlayer();
 
   if (!token) {
     return <Navigate to="/login" />;
@@ -14,6 +16,7 @@ function App() {
       <div className="flex-1">
         <Outlet />
       </div>
+      {token && currentTrackUri.length > 0 && <Player token={token} uris={currentTrackUri} />}
     </div>
   );
 }

@@ -5,17 +5,23 @@ const REDIRECT_URI =
   import.meta.env.MODE === "development"
     ? "http://localhost:5173/callback"
     : "https://spotify-clone-ten-gilt.vercel.app/callback";
-const SCOPES = [
-  "user-read-private",
-  "user-read-email",
-  "playlist-read-private",
-  "playlist-read-collaborative",
-  "playlist-modify-public",
-  "playlist-modify-private",
-  "user-top-read",
-  "user-read-playback-position",
-  "user-library-read",
-];
+    const SCOPES = [
+      "user-read-private",
+      "user-read-email",
+      "playlist-read-private", 
+      "playlist-read-collaborative",
+      "playlist-modify-public",
+      "playlist-modify-private",
+      "user-top-read",
+      "user-read-playback-position",
+      "user-library-read",
+      "user-library-modify",
+      "streaming",
+      "user-read-playback-state",
+      "user-modify-playback-state",
+      "user-read-currently-playing",
+    ];
+    
 
 const LOGIN_URL = `https://accounts.spotify.com/authorize?response_type=code&client_id=${CLIENT_ID}&scope=${encodeURIComponent(
   SCOPES.join(" "),
