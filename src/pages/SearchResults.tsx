@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
+import { usePlayer } from "../context/PlayerContext";
 
 interface Artist {
   id: string;
@@ -13,6 +14,7 @@ interface Track {
   name: string;
   artists: { name: string }[];
   album?: { images?: { url: string }[] };
+  uri: string;
 }
 
 interface Album {
@@ -62,6 +64,7 @@ const SearchResults = () => {
   const [error, setError] = useState<string | null>(null);
   const token = localStorage.getItem("spotify_access_token");
   const navigate = useNavigate();
+  const { setCurrentTrackUri } = usePlayer();
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -101,6 +104,10 @@ const SearchResults = () => {
       return "https://via.placeholder.com/216";
     }
     return images[0].url;
+  };
+
+  const handlePlayTrack = (trackUri: string) => {
+    setCurrentTrackUri([trackUri]);
   };
 
   return (
@@ -174,6 +181,7 @@ const SearchResults = () => {
                     <div
                       key={track.id}
                       className="flex gap-3 cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg"
+                      onClick={() => handlePlayTrack(track.uri)}
                     >
                       <img
                         src={getImageUrl(track.album?.images)}
@@ -182,7 +190,7 @@ const SearchResults = () => {
                       />
                       <div className="flex flex-col justify-evenly">
                         <p>{track.name}</p>
-                        <p className="text-xs opacity-80">Nome do Artista</p>
+                        <p className="text-xs opacity-80">{track.artists.map((artist) => artist.name).join(", ")}</p>
                       </div>
                     </div>
                   ))}
