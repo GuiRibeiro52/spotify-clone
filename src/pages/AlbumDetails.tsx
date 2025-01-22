@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import arrow from "../assets/images/arrow-left.png";
+import { usePlayer } from "../context/PlayerContext";
 
 interface Track {
   id: string;
@@ -9,6 +10,7 @@ interface Track {
   duration_ms: number;
   preview_url: string | null;
   track_number: number;
+  uri: string;
 }
 
 interface Artist {
@@ -30,7 +32,7 @@ const AlbumDetails = () => {
   const [album, setAlbum] = useState<Album | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
-  const token = localStorage.getItem("spotify_access_token");
+  const { token, setCurrentTrackUri } = usePlayer();
 
   useEffect(() => {
     const fetchAlbumDetails = async () => {
@@ -59,6 +61,16 @@ const AlbumDetails = () => {
     const minutes = Math.floor(ms / 60000);
     const seconds = ((ms % 60000) / 1000).toFixed(0);
     return `${minutes}:${parseInt(seconds) < 10 ? "0" : ""}${seconds}`;
+  };
+
+  const handlePlayAll = () => {
+    if (album) {
+      setCurrentTrackUri(album.tracks.items.map((track) => track.uri));
+    }
+  };
+
+  const handlePlayTrack = (trackUri: string) => {
+    setCurrentTrackUri([trackUri]);
   };
 
   if (loading) {
@@ -107,7 +119,10 @@ const AlbumDetails = () => {
             </div>
           </div>
 
-          <button className="mt-6 bg-primary text-black font-bold px-8 py-3 rounded-full hover:bg-[#1ed760] transition duration-300">
+          <button
+            className="mt-6 bg-primary text-black font-bold px-8 py-3 rounded-full hover:bg-[#1ed760] transition duration-300"
+            onClick={handlePlayAll}
+          >
             Play
           </button>
         </div>
@@ -127,9 +142,15 @@ const AlbumDetails = () => {
               <tr
                 key={track.id}
                 className="hover:bg-[#1A1A1A] transition duration-300 cursor-pointer"
+                onClick={() => handlePlayTrack(track.uri)}
               >
                 <td className="py-2 px-4">{track.track_number}</td>
-                <td className="py-2 px-4"><p className="text-sm">{track.name}</p><span className="text-xs opacity-80">{album.artists.map((artist) => artist.name).join(", ")}</span></td>
+                <td className="py-2 px-4">
+                  <p className="text-sm">{track.name}</p>
+                  <span className="text-xs opacity-80">
+                    {album.artists.map((artist) => artist.name).join(", ")}
+                  </span>
+                </td>
                 <td className="py-2 px-4 hidden sm:contents text-sm">
                   {formatDuration(track.duration_ms)}
                 </td>
