@@ -13,7 +13,7 @@ function App() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="flex-1">
+      <div className="w-full h-screen overflow-y-scroll">
         <Outlet />
       </div>
       {token && currentTrackUri.length > 0 && <Player token={token} uris={currentTrackUri} />}

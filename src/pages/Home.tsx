@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Slider from "react-slick";
+import Carousel from "../components/Carousel";
+import { usePlayer } from "../context/PlayerContext";
 
 interface Artist {
   id: string;
@@ -9,43 +10,36 @@ interface Artist {
   images?: { url: string }[];
 }
 
-interface Playlist {
+interface Track {
   id: string;
   name: string;
-  images: { url: string }[];
-  tracks: { total: number };
-  description: string;
-  owner: { id: string; display_name: string };
+  artists: { name: string }[];
+  album?: { images?: { url: string }[] };
+  uri: string;
+}
+
+interface Image {
+  url: string;
+  width?: number;
+  height?: number;
 }
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [topPlaylists, setTopPlaylists] = useState<Playlist[]>([]);
+  const [topTracks, setTopTracks] = useState<Track[]>([]);
   const [favoriteArtists, setFavoriteArtists] = useState<Artist[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const token = localStorage.getItem("spotify_access_token");
-
-  const sliderSettings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 3,
-    responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 3 } },
-      { breakpoint: 768, settings: { slidesToShow: 2 } },
-      { breakpoint: 480, settings: { slidesToShow: 1 } },
-    ],
-  };
+  const { setCurrentTrackUri } = usePlayer();
 
   const fetchData = useCallback(async () => {
     if (!token) return;
     try {
       setLoading(true);
-      const topPlaylistsResponse = await axios.get(
-        "https://api.spotify.com/v1/browse/featured-playlists",
+      const topTracksResponse = await axios.get(
+        "https://api.spotify.com/v1/me/top/tracks",
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const favoriteArtistsResponse = await axios.get(
@@ -53,11 +47,14 @@ const Home = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      setTopPlaylists(topPlaylistsResponse.data.playlists.items || []);
+      setTopTracks(topTracksResponse.data.items || []);
       setFavoriteArtists(favoriteArtistsResponse.data.items || []);
     } catch (err) {
-      console.error("Erro ao buscar dados:", err);
-      setError("Erro ao carregar os dados. Por favor, tente novamente.");
+      const errorMessage =
+        axios.isAxiosError(err) && err.response?.data?.error?.message
+          ? err.response.data.error.message
+          : "Erro ao carregar os dados. Por favor, tente novamente.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -74,8 +71,19 @@ const Home = () => {
     }
   };
 
+  const getImageUrl = (images?: Image[]) => {
+    if (!images || images.length === 0) {
+      return "https://via.placeholder.com/216";
+    }
+    return images[0].url;
+  };
+
+  const handlePlayTrack = (trackUri: string) => {
+    setCurrentTrackUri([trackUri]);
+  };
+
   return (
-    <div className="bg-[#090707] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik pb-16">
+    <div className="bg-[#090707] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik pb-24">
       <div className="p-8">
         <h1 className="text-3xl font-bold mb-4">O que vamos ouvir?</h1>
         <form onSubmit={handleSearch}>
@@ -94,39 +102,51 @@ const Home = () => {
         {!loading && !error && (
           <div className="space-y-8">
             <div>
-              <h2 className="text-2xl font-semibold mb-3">Playlists em alta</h2>
-              <Slider {...sliderSettings}>
-                {topPlaylists.map((playlist) => (
-                  <div key={playlist.id} className="p-2">
-                    <img
-                      src={playlist.images[0]?.url || "https://via.placeholder.com/300"}
-                      alt={playlist.name}
-                      className="rounded-lg w-full h-48 object-cover"
-                    />
-                    <p className="text-center text-sm mt-2">{playlist.name}</p>
-                  </div>
-                ))}
-              </Slider>
+              <h2 className="text-2xl font-semibold mb-3">Suas Top Músicas</h2>
+              {topTracks.length > 0 ? (
+                <Carousel
+                  items={topTracks}
+                  renderItem={(track) => (
+                    <div
+                      className="p-2 cursor-pointer"
+                      onClick={() => handlePlayTrack(track.uri)}
+                    >
+                      <img
+                        src={getImageUrl(track.album?.images)}
+                        alt={`Capa do álbum de ${track.name}`}
+                        className="rounded-lg object-cover mx-auto"
+                      />
+                      <p className="text-center text-sm mt-2">{track.name}</p>
+                    </div>
+                  )}
+                />
+              ) : (
+                <p className="text-center text-gray-500">Nenhuma música encontrada.</p>
+              )}
             </div>
 
             <div>
               <h2 className="text-2xl font-semibold mb-3">Seus artistas favoritos</h2>
-              <Slider {...sliderSettings}>
-                {favoriteArtists.map((artist) => (
-                  <div
-                    key={artist.id}
-                    className="p-2 cursor-pointer"
-                    onClick={() => navigate(`/artistas/${artist.id}`)}
-                  >
-                    <img
-                      src={artist.images?.[0]?.url || "https://via.placeholder.com/300"}
-                      alt={artist.name}
-                      className="rounded-lg w-full h-48 object-cover"
-                    />
-                    <p className="text-center text-sm mt-2">{artist.name}</p>
-                  </div>
-                ))}
-              </Slider>
+              {favoriteArtists.length > 0 ? (
+                <Carousel
+                  items={favoriteArtists}
+                  renderItem={(artist) => (
+                    <div
+                      className="p-2 cursor-pointer max-w-[200px]"
+                      onClick={() => navigate(`/artistas/${artist.id}`)}
+                    >
+                      <img
+                        src={artist.images?.[0]?.url || "https://via.placeholder.com/300"}
+                        alt={`Imagem de ${artist.name}`}
+                        className="rounded-full object-cover h-48 w-48 mx-auto"
+                      />
+                      <p className="text-center text-sm mt-2">{artist.name}</p>
+                    </div>
+                  )}
+                />
+              ) : (
+                <p className="text-center text-gray-500">Nenhum artista favorito encontrado.</p>
+              )}
             </div>
           </div>
         )}

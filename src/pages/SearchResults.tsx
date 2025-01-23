@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePlayer } from "../context/PlayerContext";
+import Carousel from "../components/Carousel";
 
 interface Artist {
   id: string;
@@ -131,8 +132,9 @@ const SearchResults = () => {
             {results.artists && (
               <div className="mb-10">
                 <h2 className="text-4xl font-semibold mb-3">ARTISTAS</h2>
-                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-                  {results.artists.items.map((artist) => (
+                <Carousel
+                  items={results.artists.items}
+                  renderItem={(artist) => (
                     <div
                       key={artist.id}
                       onClick={() => navigate(`/artistas/${artist.id}`)}
@@ -146,19 +148,20 @@ const SearchResults = () => {
                       <p className="font-semibold mt-6">{artist.name}</p>
                       <p className="text-sm opacity-80">Artista</p>
                     </div>
-                  ))}
-                </div>
+                  )}
+                />
               </div>
             )}
             {results.albums && (
               <div className="mb-10">
                 <h2 className="text-4xl font-semibold mb-3">ÁLBUNS</h2>
-                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-                  {results.albums.items.map((album) => (
+                <Carousel
+                  items={results.albums.items}
+                  renderItem={(album) => (
                     <div
                       key={album.id}
                       onClick={() => navigate(`/album/${album.id}`)}
-                      className="flex flex-col items-center justify-center text-center space-y-4 cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg h-full w-full"
+                      className="flex flex-col items-center justify-center text-center cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg h-full w-full sm:w-56"
                     >
                       <img
                         src={album.images?.[0]?.url || "https://via.placeholder.com/300"}
@@ -166,18 +169,29 @@ const SearchResults = () => {
                         className="rounded-lg object-cover"
                       />
                       <p className="font-semibold">{album.name}</p>
-                      <p className="text-sm opacity-80">{album.artists.map((artist) => artist.name).join(", ")} •{" "}
-                      {album.release_date.split("-")[0]}</p>
+                      <p className="text-sm opacity-80">{album.artists.map((artist) => artist.name).join(", ")} • {album.release_date.split("-")[0]}</p>
                     </div>
-                  ))}
-                </div>
+                  )}
+                />
               </div>
             )}
             {results.tracks && (
               <div className="mb-10">
                 <h2 className="text-4xl font-semibold mb-3">MÚSICAS</h2>
-                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-                  {results.tracks.items.map((track) => (
+                <Carousel
+                  items={results.tracks.items}
+                  settings={{
+                    rows: 3,
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                    infinite: true,
+                    responsive: [
+                      { breakpoint: 1024, settings: { slidesToShow: 3 } },
+                      { breakpoint: 768, settings: { slidesToShow: 2 } },
+                      { breakpoint: 480, settings: { slidesToShow: 1 } },
+                    ],
+                  }}
+                  renderItem={(track) => (
                     <div
                       key={track.id}
                       className="flex gap-3 cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg"
@@ -193,31 +207,31 @@ const SearchResults = () => {
                         <p className="text-xs opacity-80">{track.artists.map((artist) => artist.name).join(", ")}</p>
                       </div>
                     </div>
-                  ))}
-                </div>
+                  )}
+                />
               </div>
             )}
             {results.shows && (
-              <div>
+              <div className="mb-10">
                 <h2 className="text-4xl font-semibold mb-3">PODCASTS</h2>
-                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {results.shows.items.map((show) => (
+                <Carousel
+                  items={results.shows.items}
+                  renderItem={(show) => (
                     <div
                       key={show.id}
                       onClick={() => navigate(`/podcasts/${show.id}`)}
                       className="flex flex-col items-center justify-center text-center cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg h-full w-full sm:w-56"
                     >
                       <img
-                        src={show.images?.[0]?.url || "https://via.placeholder.com/300"
-                        }
+                        src={show.images?.[0]?.url || "https://via.placeholder.com/300"}
                         alt={show.name}
                         className="rounded-lg object-cover"
                       />
                       <p className="mt-6">{show.name}</p>
                       <p className="text-sm opacity-80">{show.publisher}</p>
                     </div>
-                  ))}
-                </div>
+                  )}
+                />
               </div>
             )}
             {results.playlists &&
@@ -225,20 +239,21 @@ const SearchResults = () => {
               results.playlists.items.length > 0 && (
                 <div className="mb-10">
                   <h2 className="text-4xl font-semibold mb-3">PLAYLISTS</h2>
-                  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-                    {results.playlists.items.map((playlist) => {
+                  <Carousel
+                    items={results.playlists.items}
+                    renderItem={(playlist) => {
                       const playlistImage =
                         playlist &&
                         Array.isArray(playlist.images) &&
                         playlist.images.length > 0
                           ? playlist.images[0].url
-                          : "https://via.placeholder.com/300"; 
+                          : "https://via.placeholder.com/300";
                       return (
-                        playlist && ( 
+                        playlist && (
                           <div
                             key={playlist.id}
                             onClick={() => navigate(`/playlists/${playlist.id}`)}
-                            className="flex flex-col items-center justify-center text-center space-y-4 cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg h-full w-full"
+                            className="flex flex-col items-center justify-center text-center cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg h-full w-full sm:w-56"
                           >
                             <img
                               src={playlistImage}
@@ -250,8 +265,8 @@ const SearchResults = () => {
                           </div>
                         )
                       );
-                    })}
-                  </div>
+                    }}
+                  />
                 </div>
               )}         
           </div>
