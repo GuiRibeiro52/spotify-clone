@@ -206,7 +206,6 @@ const PlaylistDetails = () => {
         className="p-8"
         style={{
           background: `linear-gradient(to bottom, rgba(0,0,0,0.8), #121212), url(${playlistImage}) no-repeat center/cover`,
-          borderBottom: "1px solid #333",
         }}
       >
         <button
@@ -276,7 +275,7 @@ const PlaylistDetails = () => {
           <>
             <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-[#333]">
+                <tr className="border-b border-[#333] uppercase opacity-80">
                   <th className="py-2 px-4">#</th>
                   <th className="py-2 px-4">Título</th>
                   <th className="py-2 px-4 hidden sm:contents">Duração</th>

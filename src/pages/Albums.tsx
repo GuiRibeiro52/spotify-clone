@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-
 import arrow from "../assets/images/arrow-left.png";
 
 interface Album {
@@ -40,7 +39,7 @@ const Albums = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          },
+          }
         );
         setArtist(artistResponse.data);
 
@@ -54,7 +53,7 @@ const Albums = () => {
               limit: 50,
               include_groups: "album,single",
             },
-          },
+          }
         );
         setAlbums(albumsResponse.data.items);
       } catch (error) {
@@ -75,25 +74,40 @@ const Albums = () => {
   };
 
   return (
-    <div className="bg-[#090707] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik pb-16">
-      <div className="p-8">
-        <div className="flex justify-between items-center mt-6">
+    <div className="bg-[#121212] min-h-screen md:pl-[250px] text-white font-rubik pb-16">
+      {artist && (
+        <div
+          className="p-8"
+          style={{
+            background: `linear-gradient(to bottom, rgba(0,0,0,0.8), #121212), url(${artist.images[0]?.url}) no-repeat center/cover`,
+          }}
+        >
           <button
             onClick={() => navigate(-1)}
-            className="text-white text-lg flex items-center gap-2 "
+            className="text-white text-lg flex items-center gap-2 mb-6"
           >
-            <img src={arrow} alt="voltar" />
-            <p className="font-bold uppercase">{artist?.name} - <span className="capitalize">Discografia</span></p>
+            <img src={arrow} alt="Voltar" />
+            <p className="font-bold">Voltar</p>
           </button>
-          {artist?.images[0]?.url && (
-            <img
-              src={artist.images[0].url}
-              alt={artist.name}
-              className="w-16 h-16 rounded-full mr-10"
-            />
-          )}
-        </div>
 
+          <div className="flex flex-col sm:flex-row items-center gap-6">
+            <img
+              src={artist.images[0]?.url || "https://via.placeholder.com/200"}
+              alt={artist.name}
+              className="w-52 h-52 shadow-lg rounded-lg"
+            />
+
+            <div>
+              <h1 className="text-xl sm:text-6xl font-extrabold mt-2">
+                {artist.name}
+              </h1>
+              <p className="mt-2 text-sm text-[#B3B3B3]">Discografia completa</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="p-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 space-y-4">
           {currentAlbums.map((album) => (
             <div
@@ -108,7 +122,9 @@ const Albums = () => {
               />
               <div>
                 <h3 className="text-lg font-semibold">{album.name}</h3>
-                <p className="text-xs opacity-80">Lançamento: {album.release_date}</p>
+                <p className="text-xs opacity-80">
+                  Lançamento: {album.release_date}
+                </p>
               </div>
             </div>
           ))}
@@ -130,7 +146,7 @@ const Albums = () => {
                 >
                   {i + 1}
                 </button>
-              ),
+              )
             )}
           </div>
         )}

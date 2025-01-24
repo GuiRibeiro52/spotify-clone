@@ -108,13 +108,12 @@ const ArtistaDetails = () => {
   }
 
   return (
-    <div className="bg-[#121212] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik pb-16">
+    <div className="bg-[#121212] min-h-screen md:pl-[250px] pt-8 md:pt-0 text-white font-rubik pb-20">
       {artist && (
         <div
           className="p-8"
           style={{
             background: `linear-gradient(to bottom, rgba(0,0,0,0.8), #121212), url(${artist.images[0]?.url}) no-repeat center/cover`,
-            borderBottom: "1px solid #333",
           }}
         >
           <button
@@ -133,7 +132,7 @@ const ArtistaDetails = () => {
             />
 
             <div>
-              <h1 className="text-xl sm:text-6xl font-extrabold mt-2">
+              <h1 className="text-2xl sm:text-6xl lg:text-8xl font-extrabold mt-2">
                 {artist.name}
               </h1>
               <p className="mt-2 text-sm text-[#B3B3B3]">
@@ -155,7 +154,7 @@ const ArtistaDetails = () => {
         <h2 className="text-2xl font-semibold mb-4">Populares</h2>
         <table className="w-full text-left">
           <thead>
-            <tr className="border-b border-[#333]">
+            <tr className="border-b border-[#333] uppercase opacity-80">
               <th className="py-2 px-4">#</th>
               <th className="py-2 px-4">Título</th>
               <th className="py-2 px-4">Duração</th>

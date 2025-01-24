@@ -72,7 +72,6 @@ const PodcastDetails = () => {
           className="p-8"
           style={{
             background: `linear-gradient(to bottom, rgba(0,0,0,0.8), #121212), url(${podcast.images[0]?.url}) no-repeat center/cover`,
-            borderBottom: "1px solid #333",
           }}
         >
           <button
@@ -114,7 +113,7 @@ const PodcastDetails = () => {
         <h2 className="text-2xl font-semibold mb-4">Episódios</h2>
         <table className="w-full text-left">
           <thead>
-            <tr className="border-b border-[#333]">
+            <tr className="border-b border-[#333] uppercase opacity-80">
               <th className="py-2 px-4">#</th>
               <th className="py-2 px-4">Título</th>
               <th className="py-2 px-4">Duração</th>
