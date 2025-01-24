@@ -14,7 +14,12 @@ interface Track {
   id: string;
   name: string;
   artists: { name: string }[];
-  album?: { images?: { url: string }[] };
+  duration_ms: number;
+  album?: {
+    id: string; 
+    name: string; 
+    images?: { url: string }[]; 
+  };
   uri: string;
 }
 
@@ -106,6 +111,11 @@ const Home = () => {
               {topTracks.length > 0 ? (
                 <Carousel
                   items={topTracks}
+                  settings={{
+                    slidesToShow: 6,
+                    slidesToScroll: 1,
+                    infinite: true,
+                  }}
                   renderItem={(track) => (
                     <div
                       className="p-2 cursor-pointer"
@@ -114,9 +124,23 @@ const Home = () => {
                       <img
                         src={getImageUrl(track.album?.images)}
                         alt={`Capa do álbum de ${track.name}`}
-                        className="rounded-lg object-cover mx-auto"
+                        className="rounded-lg object-cover w-48 mx-auto"
                       />
-                      <p className="text-center text-sm mt-2">{track.name}</p>
+                      <div className="flex flex-col items-center">
+                        <p className="text-center mt-2">{track.name}</p>
+                        <span 
+                          key={track.album?.images?.[0]?.url}
+                          className="text-sm opacity-80 cursor-pointer hover:underline"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            if (track.album?.id) {
+                              navigate(`/album/${track.album.id}`);
+                            }
+                          }}
+                          >
+                            {track.album?.name}
+                        </span>
+                      </div>
                     </div>
                   )}
                 />
@@ -133,7 +157,7 @@ const Home = () => {
                   renderItem={(artist) => (
                     <div
                       className="p-2 cursor-pointer max-w-[200px]"
-                      onClick={() => navigate(`/artistas/${artist.id}`)}
+                      onClick={() => navigate(`/artistas/${artist.id}/details`)}
                     >
                       <img
                         src={artist.images?.[0]?.url || "https://via.placeholder.com/300"}

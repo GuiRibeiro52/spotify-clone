@@ -137,7 +137,7 @@ const SearchResults = () => {
                   renderItem={(artist) => (
                     <div
                       key={artist.id}
-                      onClick={() => navigate(`/artistas/${artist.id}`)}
+                      onClick={() => navigate(`/artistas/${artist.id}/details`)}
                       className="flex flex-col items-center justify-center text-center cursor-pointer hover:bg-[#1A1A1A] p-3 rounded-lg h-full w-full sm:w-56"
                     >
                       <img

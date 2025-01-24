@@ -67,7 +67,7 @@ const Artistas = () => {
               <div
                 key={artist.id}
                 className="flex items-center gap-4 cursor-pointer hover:bg-[#1A1A1A] p-2 rounded-lg transition"
-                onClick={() => navigate(`/artistas/${artist.id}`)}
+                onClick={() => navigate(`/artistas/${artist.id}/details`)}
               >
                 <img
                   src={

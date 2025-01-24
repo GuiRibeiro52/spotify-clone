@@ -83,7 +83,7 @@ const Albums = () => {
             className="text-white text-lg flex items-center gap-2 "
           >
             <img src={arrow} alt="voltar" />
-            <p className="font-bold">{artist?.name}</p>
+            <p className="font-bold uppercase">{artist?.name} - <span className="capitalize">Discografia</span></p>
           </button>
           {artist?.images[0]?.url && (
             <img
@@ -108,7 +108,7 @@ const Albums = () => {
               />
               <div>
                 <h3 className="text-lg font-semibold">{album.name}</h3>
-                <p className="text-xs opacity-80">{album.release_date}</p>
+                <p className="text-xs opacity-80">Lançamento: {album.release_date}</p>
               </div>
             </div>
           ))}

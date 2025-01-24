@@ -9,7 +9,7 @@ import { usePlayer } from "../context/PlayerContext";
 interface Track {
   id: string;
   name: string;
-  artists: { name: string }[];
+  artists: { id: string; name: string }[];
   duration_ms: number;
   album: { images: { url: string }[] };
   uri: string;
@@ -161,8 +161,6 @@ const PlaylistDetails = () => {
         }
       );
 
-      navigate("/playlists");
-
       if (playlist?.owner.id === playlistId) {
         navigate("/playlists");
       } else {
@@ -296,9 +294,20 @@ const PlaylistDetails = () => {
                     </td>
                     <td className="py-2 px-4">
                       <p className="text-sm">{track.name}</p>
-                      <span className="text-xs opacity-80">
-                        {track.artists.map((artist) => artist.name).join(", ")}
-                      </span>
+                      <div className="flex gap-1">
+                        {track.artists.map((artist) => (
+                          <span
+                            key={artist.id}
+                            className="text-xs opacity-80 hover:underline hover:text-white cursor-pointer"
+                            onClick={(event) => {
+                              event.stopPropagation(); 
+                              navigate(`/artistas/${artist.id}/details`);
+                            }}
+                          >
+                            {artist.name}
+                          </span>
+                        ))}
+                      </div>
                     </td>
                     <td className="py-2 px-4 hidden sm:contents text-sm">
                       {formatDuration(track.duration_ms)}

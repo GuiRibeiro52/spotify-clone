@@ -13,6 +13,7 @@ import AlbumDetails from "./pages/AlbumDetails.tsx";
 import Podcasts from "./pages/Podcasts.tsx";
 import PodcastDetails from "./pages/PodcastDetails.tsx";
 import SearchResults from "./pages/SearchResults.tsx";
+import ArtistaDetails from "./pages/ArtistaDetails.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -43,6 +44,15 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+        path: "/artistas/:artistId/details",
+        element: (
+          <ProtectedRoute>
+            <ArtistaDetails />
+          </ProtectedRoute>
+        ),
+      },
+      
       {
         path: "/album/:albumId",
         element: (
