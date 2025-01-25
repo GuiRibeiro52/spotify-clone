@@ -105,7 +105,7 @@ const Home = () => {
         {error && <p className="text-red-500">{error}</p>}
 
         {!loading && !error && (
-          <div className="space-y-8">
+          <div>
             <div>
               <h2 className="text-2xl font-semibold mb-3">Suas Top Músicas</h2>
               {topTracks.length > 0 ? (
