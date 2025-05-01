@@ -11,6 +11,8 @@ import discInativo from "../assets/images/disc-inativo.png";
 import user from "../assets/images/user.png";
 import userInativo from "../assets/images/user-inativo.png";
 import down from "../assets/images/arrow-down.png";
+import microphone from  "../assets/images/microphone.png";
+import microphoneInativo from  "../assets/images/microphone-inativo.png";
 
 
 const Sidebar = () => {
@@ -22,6 +24,7 @@ const Sidebar = () => {
     location.pathname.startsWith("/artistas") ||
     location.pathname.startsWith("/album");
   const isPlaylistsActive = () => location.pathname.startsWith("/playlists");
+  const isPodcastsActive = () => location.pathname.startsWith("/podcasts");
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -29,7 +32,7 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className="w-[250px] h-screen bg-black text-white fixed left-0 top-0 flex-col justify-between font-dm font-bold hidden md:flex">
+      <div className="w-[250px] h-screen bg-black text-white fixed left-0 top-0 pb-20 flex-col justify-between font-dm font-bold hidden md:flex">
         <div className="p-4">
           <div className="mt-8">
             <img src={spotify} alt="Spotify" className="w-44" />
@@ -78,6 +81,20 @@ const Sidebar = () => {
                   className="hover:text-white transition"
                 >
                   Playlists
+                </Link>
+              </li>
+              <li className="flex items-center space-x-4">
+                <img
+                  src={isPodcastsActive() ? microphone : microphoneInativo}
+                  alt="podcast"
+                  className="w-6"
+                />
+                <Link
+                  to="/podcasts"
+                  style={{ color: isPodcastsActive() ? "#FFFFFF" : "#949EA2" }}
+                  className="hover:text-white transition"
+                >
+                  Podcasts
                 </Link>
               </li>
               <li className="flex items-center space-x-4">

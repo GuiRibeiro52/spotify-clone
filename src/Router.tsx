@@ -10,6 +10,10 @@ import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Albums from "./pages/Albums.tsx";
 import PlaylistDetails from "./pages/PlaylistDetails.tsx";
 import AlbumDetails from "./pages/AlbumDetails.tsx";
+import Podcasts from "./pages/Podcasts.tsx";
+import PodcastDetails from "./pages/PodcastDetails.tsx";
+import SearchResults from "./pages/SearchResults.tsx";
+import ArtistaDetails from "./pages/ArtistaDetails.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +44,15 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+        path: "/artistas/:artistId/details",
+        element: (
+          <ProtectedRoute>
+            <ArtistaDetails />
+          </ProtectedRoute>
+        ),
+      },
+      
       {
         path: "/album/:albumId",
         element: (
@@ -72,6 +85,30 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+        path: "/podcasts",
+        element: (
+          <ProtectedRoute>
+            <Podcasts />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/podcasts/:podcastId",
+        element: (
+          <ProtectedRoute>
+            <PodcastDetails />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/search-results",
+        element: (
+          <ProtectedRoute>
+            <SearchResults />
+          </ProtectedRoute>
+        ),
+      }      
     ],
   },
   { path: "/login", element: <Login /> },
