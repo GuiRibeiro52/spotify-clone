@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { usePlayer } from "../context/PlayerContext";
 
 const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
 const CLIENT_SECRET = import.meta.env.VITE_CLIENT_SECRET;
@@ -12,6 +13,7 @@ const TOKEN_URL = "https://accounts.spotify.com/api/token";
 
 const Callback = () => {
   const navigate = useNavigate();
+  const { setToken } = usePlayer();
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -45,7 +47,9 @@ const Callback = () => {
 
         localStorage.setItem("spotify_access_token", access_token);
         localStorage.setItem("spotify_refresh_token", refresh_token);
-
+        
+        setToken(access_token);
+        
         navigate("/");
       } catch (error) {
         console.error("Erro ao buscar token:", error);
