@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
+import { usePwaInstall } from "../hooks/usePwaInstall";
 import { FaBars, FaTimes } from "react-icons/fa";
 import spotify from "../assets/images/SpotifyLogo.png";
 import home from "../assets/images/home.png";
@@ -18,6 +19,7 @@ import microphoneInativo from  "../assets/images/microphone-inativo.png";
 const Sidebar = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isInstallable, isInstalled, installPwa } = usePwaInstall();
 
   const isActive = (path: string) => location.pathname === path;
   const isArtistasActive = () =>
@@ -117,7 +119,14 @@ const Sidebar = () => {
           </nav>
         </div>
         <div>
-          <button className="flex items-center gap-7 p-4 text-[19px]"><img src={down} alt="Install PWA" /> Instalar PWA</button>
+          {isInstallable && !isInstalled && (
+            <button 
+              onClick={installPwa} 
+              className="flex items-center gap-7 p-4 text-[19px] hover:text-green-500 transition-colors"
+            >
+              <img src={down} alt="Install PWA" /> Instalar PWA
+            </button>
+          )}
         </div>
       </div>
 
@@ -221,12 +230,15 @@ const Sidebar = () => {
     </div>
 
     <div className="mb-4">
-      <button
-        className="flex items-center gap-7 p-4 text-[19px]"
-      >
-        <img src={down} alt="Install PWA" className="w-6" />
-        Instalar PWA
-      </button>
+      {isInstallable && !isInstalled && (
+        <button
+          onClick={installPwa}
+          className="flex items-center gap-7 p-4 text-[19px] hover:text-primary transition-colors"
+        >
+          <img src={down} alt="Install PWA" className="w-6" />
+          Instalar PWA
+        </button>
+      )}
     </div>
   </div>
 </div>
